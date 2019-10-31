@@ -1,0 +1,8 @@
+H.sapiens : /afs/pdc.kth.se/home/g/gostl/InParanoid8/deployment/Species/fasta/9606.fasta
+S.cerevisiae : /afs/pdc.kth.se/home/g/gostl/InParanoid8/deployment/Species/fasta/559292.fasta
+20834 sequences in file H.sapiens
+6590 sequences in file S.cerevisiae
+Output saved to file Output.H.sapiens-S.cerevisiae
+HTML output saved to orthologs.H.sapiens-S.cerevisiae.html
+Table output saved to table.H.sapiens-S.cerevisiae
+mysql output saved to sqltable.H.sapiens-S.cerevisiae

@@ -1,0 +1,7 @@
+*.RDS
+*.vcf
+*.gvcf
+*.vcf.gz
+*.gvcf.gz
+*.fa.gz
+*.tbi

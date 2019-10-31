@@ -1,0 +1,210 @@
+!
+!Date: 10/15/2019
+!From: Saccharomyces Genome Database (SGD) 
+!URL: http://www.yeastgenome.org/ 
+!Contact Email: sgd-helpdesk@lists.stanford.edu 
+!Funding: NHGRI at US NIH, grant number 5-U41-HG001315 
+!
+
+Gene	Gene Systematic Name	Phenotype	Experiment Type	Experiment Type Category	Mutant Information	Strain Background	Chemical	Details	Reference
+ACO1	YLR304C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+ACO1	YLR304C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+ADK1	YDR226W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  ethanol,   glycerol		Gauthier S, et al. (2008) PMID:18433446
+ADK1	YDR226W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  lactate		Gauthier S, et al. (2008) PMID:18433446
+AGC1	YPR021C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303		Media: oleic acid (YPO), 0.5 mM 	Cavero S, et al. (2003) PMID:14622413
+ARP7	YPR034W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  sucrose		Peterson CL, et al. (1998) PMID:9726966
+ARP7	YPR034W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Peterson CL, et al. (1998) PMID:9726966
+ARP9	YMR033W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  sucrose		Peterson CL, et al. (1998) PMID:9726966
+ARP9	YMR033W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  galactose		Peterson CL, et al. (1998) PMID:9726966
+ARP9	YMR033W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Peterson CL, et al. (1998) PMID:9726966
+ATG36	YJL185C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Boniewska-Bernacka E, et al. (2006) PMID:17146497
+ATH1	YPR026W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  trehalose		Nwaka S, et al. (1996) PMID:8647289
+ATP1	YBL099W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  galactose		Li Y, et al. (2010) PMID:20979343
+ATP14	YLR295C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+BCY1	YIL033C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  galactose	Details: inability to grow on galactose 	Cannon JF and Tatchell K (1987) PMID:2823100
+BCY1	YIL033C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% potassium acetate	Details: similar results with raffinose, galactose, glycerol, and pyruvate 	Toda T, et al. (1987) PMID:3037314
+CIT1	YNR001C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+CIT1	YNR001C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on rich medium but not on minimal medium 	Lee YJ, et al. (2011) PMID:21246628
+COA1	YIL157C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+CYB2	YML054C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	X2180-1A	  (S)-lactate	Details: mutant grows normally on dextrose, ethanol, pyruvate, and glycerol 	Rush K, et al. (1986) PMID:3514273
+CYB2	YML054C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  (S)-lactate	Details: utilization of D-lactate is normal 	Lodi T and Ferrero I (1993) PMID:8492799
+CYB2	YML054C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  (S)-lactate		Guiard B (1985) PMID:3004948
+DJP1	YIR004W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  oleic acid		Elgersma Y, et al. (1993) PMID:7507454
+DLD1	YDL174C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  (R)-lactate	Details: utilization of L-lactate is normal 	Lodi T and Ferrero I (1993) PMID:8492799
+DOA4	YDR069C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% raffinose		Weiss P, et al. (2008) PMID:18806212
+EFM3	YJR129C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Boniewska-Bernacka E, et al. (2006) PMID:17146497
+FBP1	YLR377C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+FMC1	YIL098C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+FMP25	YLR077W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+FUM1	YPL262W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+FUM1	YPL262W	utilization of carbon source: absent 	classical genetics	classical genetics	null	D273-10B	  ethanol		Kaclíková E, et al. (1992) PMID:1587456
+FUM1	YPL262W	utilization of carbon source: absent 	classical genetics	classical genetics	null	D273-10B	  acetate		Kaclíková E, et al. (1992) PMID:1587456
+FUM1	YPL262W	utilization of carbon source: absent 	classical genetics	classical genetics	null	D273-10B	  pyruvate		Kaclíková E, et al. (1992) PMID:1587456
+GAL10	YBR019C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	Other	1% galactose		Algeri AA, et al. (1981) PMID:7021320
+GAL11	YOL051W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  oleic acid		Thakur JK, et al. (2009) PMID:19056732
+GAL7	YBR018C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	Other	1% galactose		Algeri AA, et al. (1981) PMID:7021320
+GAL83	YER027C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: gal83-H384A	S288C	  raffinose	Details: phenotype was assessed in a sip1 sip2 null background to isolate the gal83 phenotype 	Chandrashekarappa DG, et al. (2013) PMID:23184934
+GEP3	YOR205C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+GND1	YHR183W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  D-glucono-1,5-lactone		Sinha A and Maitra PK (1992) PMID:1328471
+GND2	YGR256W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	Other	  D-glucono-1,5-lactone		Sinha A and Maitra PK (1992) PMID:1328471
+GRR1	YJR090C	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: grr1-512	S288C	  raffinose		Vallier LG and Carlson M (1991) PMID:1752413
+GVP36	YIL041W	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  ethanol	Details: ethanol reduces growth and budding in the presence of glucose, compared to no effect on wt 	Querin L, et al. (2008) PMID:18156177
+HEM1	YDR232W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem1-5	FL100	2% glycerol	Details: heme deficient 	Urban-Grimal D and Labbe-Bois R (1981) PMID:7035824
+HEM1	YDR232W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem1-(ole3)	S288C	1% ethanol	Media: media supplemented with ergosterol and Tween 80 Details: reversed when media supplemented with delta-amino levulinic acid and partially reversed by haematoporphyrin or haematin 	Bard M, et al. (1974) PMID:4596057
+HEM12	YDR047W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem12-1	FL100	2% glycerol		Urban-Grimal D and Labbe-Bois R (1981) PMID:7035824
+HEM13	YDR044W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem13-7 missense allele	Other	2% glycerol		Zagorec M, et al. (1988) PMID:2838478
+HEM13	YDR044W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem13-1	FL100	2% glycerol		Urban-Grimal D and Labbe-Bois R (1981) PMID:7035824
+HEM14	YER014W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem14-1 L422P, K424E (T1265C, A1270G)	FL100	2% glycerol	Details: heme deficient 	Urban-Grimal D and Labbe-Bois R (1981) PMID:7035824
+HEM15	YOR176W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem15-1	FL100	2% glycerol		Urban-Grimal D and Labbe-Bois R (1981) PMID:7035824
+HEM2	YGL040C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem2-(ole4)	S288C	1% ethanol	Media: media supplemented with Tween 80 and ergosterol or delta-amino levulinic acid or haematoporphyrin or haematin 	Bard M, et al. (1974) PMID:4596057
+HEM3	YDL205C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem3-(ole2-2)	S288C	2% glycerol	Media: media supplemented with Tween 80 	Resnick MA and Mortimer RK (1966) PMID:5922535
+HEM3	YDL205C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: hem3-(ole2)	S288C	1% ethanol	Media: media supplemented with Tween 80 and ergosterol or delta-amino levulinic acid or haematin Details: partially reversed when media supplemented with haematoporphyrin 	Bard M, et al. (1974) PMID:4596057
+HEM4	YOR278W	utilization of carbon source: absent 	classical genetics	classical genetics	conditional Allele: hem4-(cyt)	Other	  lactate	Temperature: permissive temperature, 30 deg C 	Gunge N, et al. (1967) PMID:5584564
+HEM4	YOR278W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	3% glycerol		Tan FC, et al. (2008) PMID:18042043
+ICL1	YER065C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+ICL1	YER065C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+IDH1	YNL037C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+IDH1	YNL037C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: idh1-1	Other	2% potassium acetate	Media: semisynthetic medium 	Cupp JR and McAlister-Henn L (1991) PMID:1939242
+IDH1	YNL037C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on rich medium but not on minimal medium 	Lee YJ, et al. (2011) PMID:21246628
+IDH2	YOR136W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% potassium acetate	Media: semisynthetic medium 	Cupp JR and McAlister-Henn L (1991) PMID:1939242
+IDH2	YOR136W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+IDH2	YOR136W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: idh2-Y142A mutation in putative catalytic site	Other	2% acetic acid		Lin AP, et al. (2001) PMID:11714283
+IDH2	YOR136W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: idh2-1	Other	2% potassium acetate	Media: semisynthetic medium 	Cupp JR and McAlister-Henn L (1991) PMID:1939242
+IDP3	YNL009W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  petroselinic acid		Henke B, et al. (1998) PMID:9452501
+IDP3	YNL009W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  petroselinic acid	Details: similar results for growth on linoleic acid 	van Roermund CW, et al. (1998) PMID:9450993
+IFM1	YOL023W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+IMA1	YGR287C	utilization of carbon source: absent 	classical genetics	classical genetics	null	CEN.PK	  isomaltose	Details: also fails to utilize alpha-methylglucopyranoside 	Teste MA, et al. (2010) PMID:20562106
+INO80	YGL150C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other		Temperature: elevated temperature, 37 deg C 	Ebbert R, et al. (1999) PMID:10361278
+JEN1	YKL217W	utilization of carbon source: absent 	classical genetics	classical genetics	null	CEN.PK	2% lactate		Makuc J, et al. (2001) PMID:11536335
+JEN1	YKL217W	utilization of carbon source: absent 	classical genetics	classical genetics	null	CEN.PK	2% pyruvate		Makuc J, et al. (2001) PMID:11536335
+KGD1	YIL125W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on rich medium but not on minimal medium 	Lee YJ, et al. (2011) PMID:21246628
+MAF1	YDR005C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C		Media: YPGly (rich glycerol medium) Temperature: elevated temperature, 37 deg C 	Cieśla M, et al. (2007) PMID:17785443
+MAL11	YGR289C	utilization of carbon source: absent 	classical genetics	classical genetics	null	CEN.PK	  isomaltose	Details: also fails to utilize alpha-methylglucopyranoside 	Teste MA, et al. (2010) PMID:20562106
+MAL11	YGR289C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  maltose		Cohen JD, et al. (1984) PMID:6387396
+MAL12	YGR292W	utilization of carbon source: absent 	classical genetics	classical genetics	conditional	Other	  maltose	Temperature: elevated temperature, 37 deg C Details: mutant is able to ferment maltose at 23 deg C 	Cohen JD, et al. (1984) PMID:6387396
+MAL13	YGR288W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  maltose		Cohen JD, et al. (1984) PMID:6387396
+MCD4	YKL165C	utilization of carbon source: absent 	classical genetics	classical genetics	conditional Allele: mcd4-154	Other	  galactose		Mondésert G, et al. (1997) PMID:9335583
+MDH1	YKL085W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  acetate		Minard KI and McAlister-Henn L (1991) PMID:1986231
+MDH1	YKL085W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+MDH2	YOL126C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  ethanol		Minard KI and McAlister-Henn L (1991) PMID:1986231
+MDH2	YOL126C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  acetate		Minard KI and McAlister-Henn L (1991) PMID:1986231
+MDH2	YOL126C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+MDH2	YOL126C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+MDJ1	YFL016C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MDM30	YLR368W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MEF2	YJL102W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MGM101	YJR144W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MHR1	YDR296W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MLS1	YNL117W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+MLS1	YNL117W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+MMF1	YIL051C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MMM1	YLL006W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MRPL49	YJL096W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  glycerol		Fujita K, et al. (2001) PMID:11780787
+MRPS12	YNR036C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  glycerol		Fujita K, et al. (2001) PMID:11780787
+MST1	YKL194C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+MSW1	YDR268W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+NDI1	YML120C	utilization of carbon source: absent 	classical genetics	classical genetics	null	D273-10B	  pyruvate	Media: minimal medium Details: mutant grows weakly in rich medium with pyruvate as carbon source 	Marres CA, et al. (1991) PMID:1900238
+NDI1	YML120C	utilization of carbon source: absent 	classical genetics	classical genetics	null	D273-10B	  acetic acid	Media: either rich or minimal medium 	Marres CA, et al. (1991) PMID:1900238
+OAF1	YAL051W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid		Thakur JK, et al. (2009) PMID:19056732
+OAF1	YAL051W	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  oleic acid	Media: media lacking glycerol 	Luo Y, et al. (1996) PMID:8662598
+PCK1	YKR097W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+PEX1	YKL197C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: pex1-(pas1-1)	X2180-1A	  oleic acid		Erdmann R, et al. (1989) PMID:2568633
+PEX11	YOL147C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  oleic acid		Erdmann R and Blobel G (1995) PMID:7860627
+PEX12	YMR026C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid		Albertini M, et al. (2001) PMID:11370741
+PEX13	YLR191W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  oleic acid		Elgersma Y, et al. (1993) PMID:7507454
+PEX14	YGL153W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  oleate		Brocard C, et al. (1997) PMID:9312008
+PEX15	YOL044W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleate		Elgersma Y, et al. (1997) PMID:9405362
+PEX15	YOL044W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  oleic acid		Elgersma Y, et al. (1993) PMID:7507454
+PEX3	YDR329C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  oleate		Nötzel C, et al. (2016) PMID:27392156
+PEX4	YGR133W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	X2180-1A	0.1% oleic acid		Erdmann R, et al. (1989) PMID:2568633
+PEX6	YNL329C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function	Other	  oleic acid		Voorn-Brouwer T, et al. (1993) PMID:8241279
+PEX6	YNL329C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid		Voorn-Brouwer T, et al. (1993) PMID:8241279
+PEX7	YDR142C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified Allele: pex7-(pas7-1)	Other	0.1% oleic acid		Marzioch M, et al. (1994) PMID:7957058
+PEX7	YDR142C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	0.1% oleic acid		Marzioch M, et al. (1994) PMID:7957058
+PEX8	YGR077C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid		Rehling P, et al. (2000) PMID:10652355
+PGM2	YMR105C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	Other	1% galactose	Details: respiratory-deficient, petite strain 	DOUGLAS HC (1961) PMID:13887540
+PGM2	YMR105C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	Other	1% galactose	Media: fermentative growth conditions Details: respiratory sufficient 	DOUGLAS HC (1961) PMID:13887540
+PIP2	YOR363C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid		Rottensteiner H, et al. (1996) PMID:8670793
+PLC1	YPL268W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	7% glucose		Yoko-o T, et al. (1993) PMID:8383328
+PLC1	YPL268W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	5% galactose		Yoko-o T, et al. (1993) PMID:8383328
+PLC1	YPL268W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	5% sucrose		Yoko-o T, et al. (1993) PMID:8383328
+POS5	YPL188W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  galactose		Li Y, et al. (2010) PMID:20979343
+POX1	YGL205W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  oleic acid	Details: similar results for growth on either linoleic acid or petroselinic acid 	van Roermund CW, et al. (1998) PMID:9450993
+PSY3	YLR376C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Boniewska-Bernacka E, et al. (2006) PMID:17146497
+PXP2	YJR111C	utilization of carbon source: absent 	classical genetics	classical genetics	overexpression	S288C	  oleate	Details: overexpression of GFP fusion construct with GPD1 promoter 	Nötzel C, et al. (2016) PMID:27392156
+PYP1	YNL010W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% D-glucitol		Xu YF, et al. (2018) PMID:30240188
+PYP1	YNL010W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% mannitol		Xu YF, et al. (2018) PMID:30240188
+QCR9	YGR183C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+RGA2	YDR379W	utilization of carbon source: absent 	classical genetics	classical genetics	overexpression Allele: rga2-8A rga2-S160A, S330A, S334A, S707A, S751, S763, S770A, S772A	S288C	  galactose		Sopko R, et al. (2007) PMID:17853895
+RGR1	YLR071C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  glycerol		Young ET, et al. (2009) PMID:19732343
+RIM1	YCR028C-A	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+RIP1	YEL024W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  galactose		Li Y, et al. (2010) PMID:20979343
+RML2	YEL050C	utilization of carbon source: absent 	classical genetics	classical genetics	conditional Allele: rml2-(fat21)	S288C	  oleic acid	Temperature: elevated temperature, 36 deg C Details: conditional for growth on oleic acid (YNO) containing media 	Trotter PJ, et al. (1999) PMID:10320805
+RPE1	YJL121C	utilization of carbon source: absent 	classical genetics	classical genetics	null	CEN.PK	  xylulose		Miosga T and Zimmermann FK (1996) PMID:8929392
+RPO41	YFL036W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+RTG2	YGL252C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+SDH1	YKL148C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on both rich and minimal media 	Lee YJ, et al. (2011) PMID:21246628
+SDH2	YLL041C	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+SDH4	YDR178W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+SDH7	YDR511W	utilization of carbon source: absent 	classical genetics	classical genetics	unspecified	W303	1% potassium acetate	Media: semisynthetic medium 	McCammon MT (1996) PMID:8878673
+SFC1	YJR095W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% sodium acetate  acetate	Details: defect is observed on minimal medium but not on rich medium 	Lee YJ, et al. (2011) PMID:21246628
+SGF29	YCL010C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  ethanol,   glycerol		Lee KK, et al. (2011) PMID:21734642
+SGF29	YCL010C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  acetate		Lee KK, et al. (2011) PMID:21734642
+SIT4	YDL047W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  glycerol		Hirasaki M, et al. (2010) PMID:20347764
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-413	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-413	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-423	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-423	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-77	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-77	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-78	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-78	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-90	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-90	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  glycerol		Young ET, et al. (2009) PMID:19732343
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: snf1-T210A T210A; activation loop (T loop) site required for kinase activation	S288C	  raffinose	Details: complete inactivation of the kinase with this growth assay 	McCartney RR, et al. (2016) PMID:27524664
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: snf1-T210A T210A; activation loop (T loop) site required for kinase activation	S288C	  sucrose	Details: complete inactivation of the kinase with this growth assay 	McCartney RR, et al. (2016) PMID:27524664
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-T210E T210E; phosphomimetic of activation loop (T loop) site required for kinase activation; hypomorphic	S288C	  raffinose		McCartney RR, et al. (2016) PMID:27524664
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: snf1-S214E S214E; phosphomimetic of activation loop (T loop) inhibitory phosphorylation site	S288C	  raffinose	Details: complete inactivation of the kinase in with growth assay; similar results with S214C, S214L, S214N, S214R and S214Y 	McCartney RR, et al. (2016) PMID:27524664
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: snf1-S214E S214E; phosphomimetic of activation loop (T loop) inhibitory phosphorylation site	S288C	  sucrose	Details: complete inactivation of the kinase with this growth assay 	McCartney RR, et al. (2016) PMID:27524664
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-(haf3-1)	Other	3% glycerol		Kuchin SV, et al. (1993) PMID:8322516
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-(haf3-1)	Other	2% ethanol		Kuchin SV, et al. (1993) PMID:8322516
+SNF1	YDR477W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf1-(haf3-1)	Other	2% starch		Kuchin SV, et al. (1993) PMID:8322516
+SNF2	YOR290C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf2-141	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF2	YOR290C	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf2-50	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-39	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-39	S288C	  sucrose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-142	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-112	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-121	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-217	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-318	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF3	YDL194W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf3-72	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF4	YGL115W	utilization of carbon source: absent 	classical genetics	classical genetics	null Allele: snf4-319	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF5	YBR289W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf5-18	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF5	YBR289W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf5-815	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF6	YHL025W	utilization of carbon source: absent 	classical genetics	classical genetics	reduction of function Allele: snf6-719	S288C	  raffinose		Neigeborn L and Carlson M (1984) PMID:6392017
+SNF7	YLR025W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  raffinose		Vallier LG and Carlson M (1991) PMID:1752413
+SNF7	YLR025W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	2% raffinose, 1.0 ug/ml antimycin A	Media: anaerobic conditions 	Tu J, et al. (1993) PMID:8224817
+SNF7	YLR025W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% raffinose		Weiss P, et al. (2008) PMID:18806212
+SNF8	YPL002C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  raffinose		Vallier LG and Carlson M (1991) PMID:1752413
+SNF8	YPL002C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  galactose		Vallier LG and Carlson M (1991) PMID:1752413
+SNF8	YPL002C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% raffinose		Weiss P, et al. (2008) PMID:18806212
+SPS19	YNL202W	utilization of carbon source: absent 	homozygous diploid	classical genetics	null	Other	  petroselinate		Gurvitz A, et al. (1997) PMID:9268358
+SPT3	YDR392W	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	  galactose		Liu Y, et al. (2010) PMID:19841091
+STP22	YCL008C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% raffinose		Weiss P, et al. (2008) PMID:18806212
+STT4	YLR305C	utilization of carbon source: absent 	classical genetics	classical genetics	conditional	Other	2% raffinose	Temperature: permissive temperature 	Davie JK and Kane CM (2000) PMID:10913179
+STT4	YLR305C	utilization of carbon source: absent 	classical genetics	classical genetics	conditional	Other	2% sucrose	Temperature: permissive temperature 	Davie JK and Kane CM (2000) PMID:10913179
+STT4	YLR305C	utilization of carbon source: absent 	classical genetics	classical genetics	conditional	Other	2% galactose	Temperature: permissive temperature 	Davie JK and Kane CM (2000) PMID:10913179
+SUV3	YPL029W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+SWF1	YDR126W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  lactate		González Montoro A, et al. (2011) PMID:21383992
+SYM1	YLR251W	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  ethanol		Spinazzola A, et al. (2006) PMID:16582910
+UCC1	YLR224W	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  propionate	Details: W303-1a pdr5::HPH 	Nakatsukasa K, et al. (2015) PMID:25982115
+VPS20	YMR077C	utilization of carbon source: absent 	classical genetics	classical genetics	null	Other	2% raffinose		Weiss P, et al. (2008) PMID:18806212
+WHI2	YOR043W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+XKS1	YGR194C	utilization of carbon source: absent 	classical genetics	classical genetics	null	S288C	  xylulose		Rodriguez-Peña JM, et al. (1998) PMID:9595677
+XKS1	YGR194C	utilization of carbon source: absent 	classical genetics	classical genetics	overexpression	S288C	  xylulose		Rodriguez-Peña JM, et al. (1998) PMID:9595677
+XKS1	YGR194C	utilization of carbon source: absent 	classical genetics	classical genetics	overexpression	W303	  xylulose		Rodriguez-Peña JM, et al. (1998) PMID:9595677
+XKS1	YGR194C	utilization of carbon source: absent 	classical genetics	classical genetics	null	W303	  xylulose		Rodriguez-Peña JM, et al. (1998) PMID:9595677
+YDR133C	YDR133C	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
+YOX1	YML027W	utilization of carbon source: absent 	large-scale survey	large-scale survey	null	Sigma1278b	  glycerol		Jin R, et al. (2008) PMID:17989363
