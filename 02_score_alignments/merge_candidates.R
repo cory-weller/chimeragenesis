@@ -12,6 +12,9 @@ if(!require(data.table)) {
 
 scores <- fread('scores.txt')
 candidates <- fread('../01_InParanoid_candidates/167-candidates.txt')
+auxotrophs <- fread('../01_InParanoid_candidates/auxotrophic_candidates.txt')
+
+# First do all candidates
 dat <- merge(scores, candidates, by="cluster")
 
 # dat[, sgd_link := paste("https://www.yeastgenome.org/locus/", S.cerevisiae_GeneID, sep="")]
@@ -34,11 +37,28 @@ setcolorder(sgd_summary, c("cluster","protein1","protein2","overall_score","tota
 fwrite(sgd_summary, file="167-candidates-scores-names.txt", sep="\t", quote=F, row.names=F, col.names=T)
 
 
+# Next do auxotrophic candidtes
+dat <- merge(scores, auxotrophs, by="cluster")
 
+sgd_summary <- fread('summary.csv')
 
-dat[H.sapiens_structure==TRUE & S.cerevisiae_structure==TRUE]
+sgd_summary <- sgd_summary[reason=="MATCH", c("symbol","name","length","secondaryIdentifier","primaryIdentifier")]
 
-ggplot(data=dat, mapping=aes(x=overall_score)) + geom_histogram(bins=50)
+sgd_summary <- merge(dat, sgd_summary, by.x="S.cerevisiae_GeneID", by.y="symbol")
+
+sgd_summary[, hyperlink := paste("https://www.yeastgenome.org/locus/", primaryIdentifier, sep="")]
+setcolorder(sgd_summary, c("cluster","protein1","protein2","overall_score","total_align_length","total_gap_length","total_perfect_align","total_nonperfect_align","n_gaps","bitscore","H.sapiens_ProteinID","S.cerevisiae_ProteinID","H.sapiens_GeneID","S.cerevisiae_GeneID","H.sapiens_structure","S.cerevisiae_structure","name","length","secondaryIdentifier","primaryIdentifier"))
+fwrite(sgd_summary, file="109-auxotrophic-candidates-scores-names.txt", sep="\t", quote=F, row.names=F, col.names=T)
+
+# Inositol candidates
+library(data.table)
+inositol_auxos <- fread('109-auxotrophic-candidates-scores-names.txt')
+
+inositol_auxos_geneIDs <- unique(inositol_auxos[Chemical %like% "inositol"][,S.cerevisiae_GeneID])
+
+dat <- fread("167-candidates-scores-names.txt")
+inositol_genes <- dat[S.cerevisiae_GeneID %in% inositol_auxos_geneIDs]
+fwrite(inositol_genes, file="51-inositol-candidates-scores-names.txt", sep="\t", quote=F, row.names=F, col.names=T)
 
 
 # good examples with score > 0.5

@@ -72,7 +72,7 @@ loadStructures <- function(structures_filename) {
   return(structures)
 }
 
-setwd("/data/wellerca/yeast-gene-knockout/01_InParanoid_candidates/")
+setwd("/data/wellerca/yeast-chimeragenesis/01_InParanoid_candidates/")
 
 candidates <- loadCandidates("candidate_pairs.txt")
 phenotypes <- loadPhenotypes("phenotypes.txt")
@@ -119,7 +119,10 @@ candidates <- candidates[any_structure==TRUE]
 setnames(candidates, "H.sapiens", "H.sapiens_ProteinID")
 setnames(candidates, "S.cerevisiae", "S.cerevisiae_ProteinID")
 
+# get auxo phenotypes in table
+auxotrophs <- merge(candidates,phenotypes[Phenotype=="auxotrophy"], by.x="S.cerevisiae_GeneID",  by.y="Gene")
+fwrite(auxotrophs, file="auxotrophic_candidates.txt",  quote=F, row.names=F, col.names=T, sep="\t")
+
 # merge in phenotypes
 candidates <- merge(candidates, phenotypes.wide, by.x="S.cerevisiae_GeneID", by.y="Gene")
-
 fwrite(candidates, file="167-candidates.txt", quote=F, row.names=F, col.names=T, sep="\t")
