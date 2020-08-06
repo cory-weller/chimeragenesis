@@ -104,30 +104,78 @@ def permute_alignment(alignment, n):
         random.shuffle(alignment_list)
         yield(''.join(alignment_list))
 
-def find_matches(string, re_pattern):
+def check_positive_integer(value):
+    try:
+        ivalue = int(value)
+    except TypeError:
+        raise argparse.ArgumentTypeError
+    if int(value) <= 0:
+        raise argparse.ArgumentValueError("%s is not a positive integer" % value)
+    return ivalue
 
-
-if __name__ == "__main__":
+def main():
     import sys
     import re
     import glob
     import random
-    import datatable as dt
+    import argparse
 
-    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-V", "--verbose", 
+                    help = "increase output verbosity",
+                    action = "store_true")
+    parser.add_argument("-L", "--length", 
+                    type = int,
+                    nargs = '?',
+                    const = 1,
+                    default = 4,
+                    help = "Minimum number of consecutive amino acids above specificity threshold (defined by -S)")
+    parser.add_argument("-S", "--specificity", 
+                    type = str,
+                    nargs = '?',
+                    const = 1,
+                    default = "high", 
+                    help = ("Degree of matching in clustal alignment output." +
+                            "Used with -L to determine minimum length of homologous region.\n" +
+                            "low includes [.:*], medium includes [:*], high includes [*]."))
+    parser.add_argument("-p", "--permutations", 
+                    type = int,
+                    nargs = '?',
+                    const = 1,
+                    default = 100, 
+                    help = ("Number of alignment permutations to run. Default: 100" +
+                            "Used with -L to determine minimum length of homologous region.\n" +
+                            "low includes [.:*], medium includes [:*], high includes [*]."))
+    args = parser.parse_args()
+    if args.verbose:
+        print("verbosity turned on")
 
-    print(sys.argv)
+    print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
+
+
+    # VALIDATE ARGUMENTS
+    try: assert args.length > 0, "ERROR: length must be > 0"
+    except AssertionError as error: sys.exit(error)
+
+    try: assert args.specificity in ["low", "medium", "high"], "specificity must be low, medium, or high"
+    except AssertionError as error: sys.exit(error)
+
+    sys.exit("reached exit")
+
+
 
     # file_list = glob.glob("protein_alignments/*.aln")
     #args = sys.argv
-    args = ["chimera.py", "MET12_MET13.pep.aln", "3", "MET12_flanking.fasta", "MET13_flanking.fasta", "100"]
+    args = ["chimera.py", "MET12_MET13.pep.aln", "low" "3", "MET12_flanking.fasta", "MET13_flanking.fasta", "100"]
     clustal_aln_file = args[1]
     n_perfect_matches = int(args[2])
     seq_1_plus_1kb_file = args[3]
     seq_2_plus_1kb_file = args[4]
     permutations = int(args[5])
-    patterns = 
-    
+
+    homology_specificity = args[2] # values = low, medium, high
+    homology_min_length = int(args[3]) # values = integers 
+
     clustal_alignment = read_text(clustal_aln_file)
     #print(clustal_alignment)
 
@@ -137,7 +185,10 @@ if __name__ == "__main__":
     homology_regions = get_homology_regions(unfolded_alignment[2], n_perfect_matches)
     print(homology_regions)
 
-    non_homology_regions = [(0,homology_regions[0][0])] + [ (homology_regions[x][1], homology_regions[x+1][0]) for x in range(0,len(homology_regions)-1)] + [(homology_regions[-1][1], len(unfolded_alignment[2]))]
+    non_homology_regions = ( [(0,homology_regions[0][0])] +
+                    [ (homology_regions[x][1], homology_regions[x+1][0]) for x in range(0,len(homology_regions)-1)] +
+                    [(homology_regions[-1][1], len(unfolded_alignment[2]))] )
+
     #print(non_homology_regions)
 
 
@@ -175,7 +226,6 @@ if __name__ == "__main__":
 
     itertools.permutations(unfolded_alignment[2])
 
-##
-a = permute_alignment(unfolded_alignment[2], permutations)
-for i in a:
-    print(i)
+
+if __name__ == "__main__":
+    main()
