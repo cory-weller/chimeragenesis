@@ -104,6 +104,16 @@ def permute_alignment(alignment, n):
         random.shuffle(alignment_list)
         yield(''.join(alignment_list))
 
+def wrap_fasta(seq, line_length=60):
+    return '\n'.join([seq[i:i+line_length] for i in range(0, len(seq), line_length)])
+
+def permute_peptide_fasta(fasta_text):
+    split_text = fasta_text.rstrip().split('\n')
+    header = split_text[0]
+    seq = list(''.join(split_text[1:]).rstrip('*'))
+    random.shuffle(seq)
+    return(header + '\n' + wrap_fasta(''.join(seq) + '*') + '\n')
+
 def check_positive_integer(value):
     try:
         ivalue = int(value)
@@ -114,14 +124,22 @@ def check_positive_integer(value):
     return ivalue
 
 def main():
+    import os
     import sys
     import re
     import glob
     import random
     import argparse
+    import subprocess
+    from subprocess import PIPE
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-V", "--verbose", 
+    parser.add_argument('pep1_filename', metavar='pep1.fasta', type=str,
+                    help='First peptide fasta file')
+
+    parser.add_argument('pep2_filename', metavar='pep2.fasta', type=str,
+                    help='Second peptide fasta file')
+    parser.add_argument("-v", "--verbose", 
                     help = "increase output verbosity",
                     action = "store_true")
     parser.add_argument("-L", "--length", 
@@ -130,7 +148,7 @@ def main():
                     const = 1,
                     default = 4,
                     help = "Minimum number of consecutive amino acids above specificity threshold (defined by -S)")
-    parser.add_argument("-S", "--specificity", 
+    parser.add_argument("-s", "--specificity", 
                     type = str,
                     nargs = '?',
                     const = 1,
@@ -152,13 +170,36 @@ def main():
 
     print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
 
-
     # VALIDATE ARGUMENTS
     try: assert args.length > 0, "ERROR: length must be > 0"
     except AssertionError as error: sys.exit(error)
 
     try: assert args.specificity in ["low", "medium", "high"], "specificity must be low, medium, or high"
     except AssertionError as error: sys.exit(error)
+
+    # Check for missing input files
+    missing_files = 0
+    for filename in [args.pep1_filename, args.pep2_filename]:
+        if not os.path.isfile(filename):
+            print("Error: File %s does not exist" % filename)
+            missing_files += 1
+    if not os.path.isfile("clustalo"):
+        print("Error: clustalo binary not found")
+        missing_files += 1
+    if missing_files > 0:
+        sys.exit("Aborting due to missing files")
+
+    concat_alignment = subprocess.check_output(["cat", args.pep1_filename, args.pep2_filename])
+
+    # Read in alignments as text
+    # Concatenate within script
+    # Feed concatenated fasta file as input via PIPE
+
+    pep1 = read_text(args.pep1_filename)
+    pep2 = read_text(args.pep2_filename)
+    
+    process = subprocess.run(["./clustalo", "-i", "-", "--outfmt", "clu"], input=concat_alignment, stdout=PIPE)
+    print(process.stdout.decode())
 
     sys.exit("reached exit")
 
