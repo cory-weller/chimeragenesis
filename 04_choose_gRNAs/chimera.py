@@ -136,6 +136,16 @@ def run_permutations(n_permutations, pep1, pep2):
             print(result)
         yield result
 
+def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
+    print("Writing %s permutations to %s" % (n_permutations, outfile_name))
+    with open(outfile_name, "w") as outfile:
+        current_i = 0
+        for i in permutations:
+            current_i += 1
+            if current_i % 10 == 0:
+                print(current_i)
+            outfile.write('\n'.join(unfold_alignment(i)) + '\n\n')
+
 #######################################################################################################################
 #                                                        MAIN
 #######################################################################################################################
@@ -206,7 +216,6 @@ if __name__ == "__main__":
 
     try: assert args.specificity in ["low", "medium", "high"], "specificity must be low, medium, or high"
     except AssertionError as error: sys.exit(error)
-
     
 #######################################################################################################################
 
@@ -235,22 +244,17 @@ if __name__ == "__main__":
     pep2 = read_text(args.pep2_filename).rstrip() + "\n"    # Ensures file ends with newline
 
 
+
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
         permutations = run_permutations(args.permutations, pep1, pep2)
         print("Built permutation generator!")
-        print("Writing %s permutations to permutations.out" % (args.permutations))
-        with open("permutations.out", "w") as outfile:
-            current_i = 0
-            for i in permutations:
-                current_i += 1
-                if current_i % 10 == 0:
-                    print(current_i)
-                outfile.write('\n'.join(unfold_alignment(i)) + '\n\n')
-    else:
+        write_permutations(permutations, args.permutations)
+
+    elif args.permutations == None:
         concat_alignment = pep1 + pep2
         aln = run_clustal(concat_alignment.encode())
-
+        print(aln)
 
     sys.exit("Exited successfully!")
 
