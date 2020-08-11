@@ -114,15 +114,26 @@ def permute_peptide_fasta(fasta_text):
     header = split_text[0]
     seq = list(''.join(split_text[1:]).rstrip('*'))
     random.shuffle(seq)
-    return(header + '\n' + wrap_fasta(''.join(seq) + '*') + '\n')
-
-
+    permuted_seq = header + '\n' + wrap_fasta(''.join(seq) + '*') + '\n'
+    if debug == True:
+        print(permuted_seq)
+    return permuted_seq
 
 def run_clustal(b_alignment):
     output = subprocess.run(["./clustalo", "-i", "-", "--outfmt", "clu"], input=b_alignment, stdout=PIPE).stdout.decode()
     if debug:
         print(output)
     return output
+
+def run_permutations(n_permutations, pep1, pep2):
+    for _ in range(n_permutations):
+        if random.randint(0,1) == 0:
+            result = run_clustal((pep1 + permute_peptide_fasta(pep2)).encode())
+        else:
+            result = run_clustal((permute_peptide_fasta(pep1) + pep2).encode())
+        if debug == True:
+            print(result)
+        yield result
 
 if __name__ == "__main__":
     print("main!")
@@ -167,11 +178,12 @@ if __name__ == "__main__":
                         help = ("Number of alignment permutations to run. Default: 100" +
                                 "Used with -L to determine minimum length of homologous region.\n" +
                                 "low includes [.:*], medium includes [:*], high includes [*]."))
-
     args = parser.parse_args()
     if args.debug:
         debug = True
-        print("debug mode: on with increased output verbosity.")
+        print("debug mode on, increasing verbosity.")
+    else:
+        debug = False
 
     print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
 
@@ -194,25 +206,26 @@ if __name__ == "__main__":
     if missing_files > 0:
         sys.exit("Aborting due to missing files")
 
+    # RUN CODE
+
     pep1 = read_text(args.pep1_filename).rstrip() + "\n"    # Ensures file ends with newline
     pep2 = read_text(args.pep2_filename).rstrip() + "\n"    # Ensures file ends with newline
 
-    #concat_alignment = subprocess.check_output(["cat", args.pep1_filename, args.pep2_filename])
     concat_alignment = pep1 + pep2
 
-    print(concat_alignment)
-    # Read in alignments as text
-    # Concatenate within script
-    # Feed concatenated fasta file as input via PIPE
-
-    pep1 = read_text(args.pep1_filename)
-    pep2 = read_text(args.pep2_filename)
     aln = run_clustal(concat_alignment.encode())
     
+    pep1_permuted = permute_peptide_fasta(pep1)
+    pep2_permuted = permute_peptide_fasta(pep2)
+
 
 
     if args.permutations > 0:
-        print("Yes perms")
+        permutations = run_permutations(args.permutations, pep1, pep2)
+
+    print("Built permutation generator!")
+    #for i in permutations:
+    #    print(i)
 
     sys.exit("reached exit")
 
