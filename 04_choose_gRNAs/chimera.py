@@ -46,9 +46,23 @@ def unfold_alignment(rawText):
             new_score += score
     return [seq1, seq2, new_score]
 
-def get_homology_regions(aln_scores, n_perfect_matches):
-    boundaries = [(m.start(0), m.end(0)) for m in re.finditer(r"[\*]{%s,}" % n_perfect_matches, aln_scores)]
-    return boundaries
+def get_homology_regions(permutations, length, specificity):
+    if specificity == "high":
+        pattern = r"[*]"
+    elif specificity == "medium":
+        pattern = r"[*;]"
+    elif specificity == "low":
+        pattern = r"[*;.]"
+    pattern += "{%s,}" % length
+    for permutation in permutations:
+        unfolded_alignment = unfold_alignment(permutation)
+        boundaries = [(m.start(0), m.end(0)) for m in re.finditer(pattern, unfolded_alignment[2])]
+        yield boundaries
+
+def get_non_homology_regions(homology_regions, alignment_length):
+    return ( [(0,homology_regions[0][0])] +
+                [ (homology_regions[x][1], homology_regions[x+1][0]) for x in range(0,len(homology_regions)-1)] +
+                [(homology_regions[-1][1], alignment_length)] )
 
 def get_overall_score(score):
     gaps = re.findall('[fs]+', score)
@@ -129,12 +143,12 @@ def run_clustal(b_alignment):
 def run_permutations(n_permutations, pep1, pep2):
     for _ in range(n_permutations):
         if random.randint(0,1) == 0:
-            result = run_clustal((pep1 + permute_peptide_fasta(pep2)).encode())
+            alignment = run_clustal((pep1 + permute_peptide_fasta(pep2)).encode())
         else:
-            result = run_clustal((permute_peptide_fasta(pep1) + pep2).encode())
+            alignment = run_clustal((permute_peptide_fasta(pep1) + pep2).encode())
         if debug == True:
-            print(result)
-        yield result
+            print(alignment)
+        yield permuted_alignment(pep1, pep2, alignment)
 
 def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
     print("Writing %s permutations to %s" % (n_permutations, outfile_name))
@@ -145,6 +159,21 @@ def write_permutations(permutations, n_permutations, outfile_name="permutations.
             if current_i % 10 == 0:
                 print(current_i)
             outfile.write('\n'.join(unfold_alignment(i)) + '\n\n')
+
+
+
+##################
+# DEFINE CLASSES #
+##################
+
+class permuted_alignment:
+    help = 'clustal alignment of permuted protein sequence'
+    def __init__(self, pep1, pep2, alignment):
+        self.pep1 = pep1
+        self.pep2 = pep2
+        self.aln = alignment
+    def unfold(self):
+        self.aln1, self.aln2, self.scores = unfold_alignment(self.aln)  # unfolded clustal alignment
 
 #######################################################################################################################
 #                                                        MAIN
@@ -243,14 +272,14 @@ if __name__ == "__main__":
     pep1 = read_text(args.pep1_filename).rstrip() + "\n"    # Ensures file ends with newline
     pep2 = read_text(args.pep2_filename).rstrip() + "\n"    # Ensures file ends with newline
 
-
-
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
         permutations = run_permutations(args.permutations, pep1, pep2)
         print("Built permutation generator!")
-        write_permutations(permutations, args.permutations)
-
+        #write_permutations(permutations, args.permutations)
+        homology_regions = get_homology_regions(permutations, args.length, args.specificity)
+        for i in homology_regions:
+            print(get_non_homology_regions(i))
     elif args.permutations == None:
         concat_alignment = pep1 + pep2
         aln = run_clustal(concat_alignment.encode())
@@ -258,49 +287,7 @@ if __name__ == "__main__":
 
     sys.exit("Exited successfully!")
 
-
 #######################################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     #####################
     # DOES NOT RUN CODE #
