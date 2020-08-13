@@ -196,22 +196,33 @@ if __name__ == "__main__":
                         const=1,
                         default=4,
                         help='''Minimum number of consecutive amino acids above the
-                                specificity threshold (defined by -S)''')
+                                specificity threshold (defined by -S). Default: 4''')
     parser.add_argument("-s", "--specificity",
                         type=str,
                         nargs='?',
                         const=1,
                         default="high",
-                        help=("Degree of matching in clustal alignment output." +
-                              "Used with -L to determine minimum length of homologous region.\n" +
-                              "low includes [.:*], medium includes [:*], high includes [*]."))
+                        help='''Accepts 'low' 'medium' or 'high'.
+                                Defines degree of amino acid similarity from clustal alignment
+                                for defining regions of confident homology. Used with -L.
+                                'low' includes [.:*], 'medium includes' [:*], 'high' includes [*].
+                                Default: high.''')
     parser.add_argument("-p", "--permutations",
                         type=int,
                         nargs='?',
                         const=1,
-                        help = ("Number of alignment permutations to run. Default: 100" +
-                                "Used with -L to determine minimum length of homologous region.\n" +
-                                "low includes [.:*], medium includes [:*], high includes [*]."))
+                        help = '''Number of alignment permutations to run. Default: 100.''')
+    parser.add_argument("-u", "--unique", 
+                        help='''Accepts 'prot' or 'dna'. 
+                                Default 'prot' will deduplicate oligo sequences, retaining one representative
+                                for a given protein sequence. 'dna' will retain identical dna sequences,
+                                with the possibility of duplicate resulting protein sequences (which may be of
+                                interest for codon bias).''',
+                        type=str,
+                        nargs='?',
+                        const=1,
+                        default="prot")
+
     args = parser.parse_args()
     if args.debug:
         debug = True
@@ -230,7 +241,10 @@ if __name__ == "__main__":
     try: assert args.length > 0, "ERROR: length must be > 0"
     except AssertionError as error: sys.exit(error)
 
-    try: assert args.specificity in ["low", "medium", "high"], "specificity must be low, medium, or high"
+    try: assert args.specificity in ["low", "medium", "high"], "ERROR: -s, --specificity must be 'low', 'medium', or 'high'"
+    except AssertionError as error: sys.exit(error)
+
+    try: assert args.unique in ["prot", "dna"], "ERROR: -u, --unique must be 'prot' or 'dna'"
     except AssertionError as error: sys.exit(error)
     
 #######################################################################################################################
