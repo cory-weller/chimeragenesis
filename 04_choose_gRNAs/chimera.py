@@ -58,7 +58,10 @@ def get_homology_regions(alignment_scores, length, specificity):
     return boundaries
 
 def get_non_homology_regions(homology_regions, alignment_length):
-    return ( [(0,homology_regions[0][0])] +
+    if len(homology_regions) == 0:
+        return [(0, alignment_length)]
+    else:
+        return ( [(0,homology_regions[0][0])] +
                 [ (homology_regions[x][1], homology_regions[x+1][0]) for x in range(0,len(homology_regions)-1)] +
                 [(homology_regions[-1][1], alignment_length)] )
 
@@ -260,8 +263,14 @@ if __name__ == "__main__":
         print("Building permutation generator for %s permutations..." % (args.permutations))
         permutations = run_permutations(args.permutations, pep1, pep2, args.length, args.specificity)
         print("Built permutation generator!")
-        for i in permutations:
-            print(len(i.combos))
+        with open(args.specificity + '.' + str(args.length) + '.permutations', 'w') as outfile:
+            outfile.write(                           
+                 '\t'.join(["homology_regions", "alignment_length", "n_chimeras"]) + '\n'
+                        )
+            for i in permutations:
+                outfile.write(
+                            '\t'.join([str(x) for x in [len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
+                            )
     elif args.permutations == None:
         concat_alignment = pep1 + pep2
         aln = run_clustal(concat_alignment.encode())
