@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-permutations="10"
+permutations="50000"
 
 for length in $(seq 1 5); do
     for specificity in "low" "medium" "high"; do
