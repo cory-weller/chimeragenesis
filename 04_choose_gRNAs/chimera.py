@@ -126,9 +126,12 @@ def run_clustal(b_alignment):
         print(output)
     return output
 
-def run_permutations(n_permutations, pep1, pep2, length, specificity):
-    for _ in range(n_permutations):
-        yield permuted_alignment(random.randint(0,1), pep1, pep2, length, specificity)
+def run_alignment(n_permutations, pep1, pep2, length, specificity):
+    if n_permutations == 0:
+        yield clustal_alignment(0, pep1, pep2, length, specificity)
+    elif n_permutations > 0:
+        for _ in range(n_permutations):
+            yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
 # Unused
 # def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
@@ -145,13 +148,17 @@ def run_permutations(n_permutations, pep1, pep2, length, specificity):
 # DEFINE CLASSES #
 ##################
 
-class permuted_alignment:
+class clustal_alignment:
     help = 'clustal alignment of permuted protein sequence'
-    def __init__(self, zero_or_one, pep1, pep2, length, specificity):
-        if zero_or_one == 0:
+    # zero for unpermuted, 1 for permute seq 1, 2 for permute seq 2
+    def __init__(self, permute, pep1, pep2, length, specificity): # 0 for unpermuted, 1 for permute seq 1
+        if permute == 0:
+            self.pep1 = pep1
+            self.pep2 = pep2
+        elif permute == 1:
             self.pep1 = pep1
             self.pep2 = permute_peptide_fasta(pep2)
-        elif zero_or_one == 1:
+        elif permute == 2:
             self.pep1 = permute_peptide_fasta(pep1)
             self.pep2 = pep2
         self.clustal = run_clustal(
@@ -230,7 +237,8 @@ if __name__ == "__main__":
     else:
         debug = False
 
-    print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
+    if debug == True:
+        print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
 
 #######################################################################################################################
 
@@ -275,21 +283,27 @@ if __name__ == "__main__":
 
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
-        permutations = run_permutations(args.permutations, pep1, pep2, args.length, args.specificity)
+        permutations = run_alignment(args.permutations, pep1, pep2, args.length, args.specificity)
         print("Built permutation generator!")
         with open(args.specificity + '.' + str(args.length) + '.permutations', 'w') as outfile:
             outfile.write(                           
-                 '\t'.join(["homology_regions", "alignment_length", "n_chimeras"]) + '\n'
+                 '\t'.join(["specificity", "length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
                         )
             for i in permutations:
                 outfile.write(
-                            '\t'.join([str(x) for x in [len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
+                            '\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
                             )
     elif args.permutations == None:
-        concat_alignment = pep1 + pep2
-        aln = run_clustal(concat_alignment.encode())
-        print(aln)
-
+        alignment = run_alignment(0, pep1, pep2, args.length, args.specificity)
+        i = list(alignment)[0]
+        if not os.path.isfile("true_alignment.out"):
+            with open("true_alignment.out", 'w') as outfile:
+                outfile.write(                           
+                 '\t'.join(["specificity", "length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
+                        )
+        with open("true_alignment.out", 'a') as outfile:
+            outfile.write('\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n')
+# python3 chimera.py -s "high" -L 5  MET12.pep.fasta MET13.pep.fasta
     sys.exit("Exited successfully!")
 
 #######################################################################################################################
