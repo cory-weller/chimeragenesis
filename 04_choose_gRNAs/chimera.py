@@ -46,7 +46,7 @@ def unfold_alignment(rawText):
             new_score += score
     return [seq1, seq2, new_score]
 
-def get_homology_regions(permutations, length, specificity):
+def get_homology_regions(alignment_scores, length, specificity):
     if specificity == "high":
         pattern = r"[*]"
     elif specificity == "medium":
@@ -54,10 +54,8 @@ def get_homology_regions(permutations, length, specificity):
     elif specificity == "low":
         pattern = r"[*;.]"
     pattern += "{%s,}" % length
-    for permutation in permutations:
-        unfolded_alignment = unfold_alignment(permutation)
-        boundaries = [(m.start(0), m.end(0)) for m in re.finditer(pattern, unfolded_alignment[2])]
-        yield boundaries
+    boundaries = [(m.start(0), m.end(0)) for m in re.finditer(pattern, alignment_scores)]
+    return boundaries
 
 def get_non_homology_regions(homology_regions, alignment_length):
     return ( [(0,homology_regions[0][0])] +
@@ -72,26 +70,6 @@ def get_overall_score(score):
     total_align_length = len(nonperfect_align) + len(perfect_align)
     overall_score = float(len(perfect_align)) / (len(perfect_align) + len(nonperfect_align) + len(gaps))
     return [overall_score, total_align_length, total_gap_length, len(perfect_align), len(nonperfect_align), len(gaps)]
-
-def pad_from_homology(non_homology_regions, nt_padding):
-    non_homology_interior = [ (x[0]+nt_padding, x[1]-nt_padding) for x in non_homology_regions[1:-1]]
-    non_homology_first = [(non_homology_regions[0][0], non_homology_regions[0][1]-nt_padding)]
-    non_homology_last = [(non_homology_regions[-1][0]+nt_padding, non_homology_regions[-1][1])]
-    combined_ranges = non_homology_first + non_homology_interior + non_homology_last
-    #return(combined_ranges)
-    return [x for x in combined_ranges if x[0] <= x[1] and x[0] >= 0] 
-
-def write_scores(score_filename):
-    with open(score_filename, 'w') as score_file:
-        score_file.write('\t'.join(['cluster', 'protein1', 'protein2', 'overall_score', 'total_align_length', 'total_gap_length', 'total_perfect_align', 'total_nonperfect_align', 'n_gaps']) + '\n')
-        for filename in file_list:
-            cluster, protein1, protein2 = re.split(r"\.|_", filename.split("/")[1])[0:3]
-            with open(filename + ".2", 'w') as outfile:
-                seq1, seq2, score = unfold_alignment(filename)
-                outfile.write('\n'.join([seq1, seq2, score]))
-                outfile.write('\n')
-                overall_score, total_align_length, total_gap_length, total_perfect_align, total_nonperfect_align, n_gaps = get_overall_score(score)
-                score_file.write('\t'.join([str(x) for x in [cluster, protein1, protein2, overall_score, total_align_length, total_gap_length, total_perfect_align, total_nonperfect_align, n_gaps]]) + '\n')
 
 def open_fasta(filename):
     with open(filename, "r") as infile:
@@ -113,7 +91,12 @@ def return_combos(dict1, dict2, ranges):
     for i in ranges:
         for start in range(i[0], i[1]):
             for end in range(start, i[1]):
-                yield(dict1[start], dict2[end])
+                value1 = dict1[start]
+                value2 = dict2[end]
+                if not (value1 == 'NA' or value2 == 'NA'):
+                    yield(dict1[start], dict2[end])
+                else:
+                    continue
 
 def permute_alignment(alignment, n):
     alignment_list = list(alignment)
@@ -140,27 +123,20 @@ def run_clustal(b_alignment):
         print(output)
     return output
 
-def run_permutations(n_permutations, pep1, pep2):
+def run_permutations(n_permutations, pep1, pep2, length, specificity):
     for _ in range(n_permutations):
-        if random.randint(0,1) == 0:
-            alignment = run_clustal((pep1 + permute_peptide_fasta(pep2)).encode())
-        else:
-            alignment = run_clustal((permute_peptide_fasta(pep1) + pep2).encode())
-        if debug == True:
-            print(alignment)
-        yield permuted_alignment(pep1, pep2, alignment)
+        yield permuted_alignment(random.randint(0,1), pep1, pep2, length, specificity)
 
-def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
-    print("Writing %s permutations to %s" % (n_permutations, outfile_name))
-    with open(outfile_name, "w") as outfile:
-        current_i = 0
-        for i in permutations:
-            current_i += 1
-            if current_i % 10 == 0:
-                print(current_i)
-            outfile.write('\n'.join(unfold_alignment(i)) + '\n\n')
-
-
+# Unused
+# def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
+#     print("Writing %s permutations to %s" % (n_permutations, outfile_name))
+#     with open(outfile_name, "w") as outfile:
+#         current_i = 0
+#         for i in permutations:
+#             current_i += 1
+#             if current_i % 10 == 0:
+#                 print(current_i)
+#             outfile.write('\n'.join(unfold_alignment(i)) + '\n\n')
 
 ##################
 # DEFINE CLASSES #
@@ -168,12 +144,22 @@ def write_permutations(permutations, n_permutations, outfile_name="permutations.
 
 class permuted_alignment:
     help = 'clustal alignment of permuted protein sequence'
-    def __init__(self, pep1, pep2, alignment):
-        self.pep1 = pep1
-        self.pep2 = pep2
-        self.aln = alignment
-    def unfold(self):
-        self.aln1, self.aln2, self.scores = unfold_alignment(self.aln)  # unfolded clustal alignment
+    def __init__(self, zero_or_one, pep1, pep2, length, specificity):
+        if zero_or_one == 0:
+            self.pep1 = pep1
+            self.pep2 = permute_peptide_fasta(pep2)
+        elif zero_or_one == 1:
+            self.pep1 = permute_peptide_fasta(pep1)
+            self.pep2 = pep2
+        self.clustal = run_clustal(
+                                    (self.pep1 + self.pep2).encode() 
+                                    )
+        self.aln1, self.aln2, self.scores = unfold_alignment(self.clustal)  # unfolded clustal alignment
+        self.homology_regions = get_homology_regions(self.scores, length, specificity)
+        self.non_homology_regions = get_non_homology_regions(self.homology_regions, len(self.aln1))
+        self.offset1 = get_index_offset(self.aln1)
+        self.offset2 = get_index_offset(self.aln2)
+        self.combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions))
 
 #######################################################################################################################
 #                                                        MAIN
@@ -188,7 +174,6 @@ if __name__ == "__main__":
     import os
     import sys
     import re
-    import glob
     import random
     import argparse
     import subprocess
@@ -197,7 +182,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('pep1_filename', metavar='pep1.fasta', type=str,
                         help='First peptide fasta file')
-
     parser.add_argument('pep2_filename', metavar='pep2.fasta', type=str,
                         help='Second peptide fasta file')
     parser.add_argument("-d", "--debug", 
@@ -274,84 +258,15 @@ if __name__ == "__main__":
 
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
-        permutations = run_permutations(args.permutations, pep1, pep2)
+        permutations = run_permutations(args.permutations, pep1, pep2, args.length, args.specificity)
         print("Built permutation generator!")
-        #write_permutations(permutations, args.permutations)
-        homology_regions = get_homology_regions(permutations, args.length, args.specificity)
-        for i in homology_regions:
-            print(get_non_homology_regions(i))
+        for i in permutations:
+            print(len(i.combos))
     elif args.permutations == None:
         concat_alignment = pep1 + pep2
         aln = run_clustal(concat_alignment.encode())
         print(aln)
 
     sys.exit("Exited successfully!")
-
-#######################################################################################################################
-
-    #####################
-    # DOES NOT RUN CODE #
-    #####################
-
-    # file_list = glob.glob("protein_alignments/*.aln")
-    #args = sys.argv
-    args = ["chimera.py", "MET12_MET13.pep.aln",
-            "low" "3", "MET12_flanking.fasta", 
-            "MET13_flanking.fasta", "100"]
-    clustal_aln_file = args[1]
-    n_perfect_matches = int(args[2])
-    seq_1_plus_1kb_file = args[3]
-    seq_2_plus_1kb_file = args[4]
-    permutations = int(args[5])
-
-    homology_specificity = args[2] # values = low, medium, high
-    homology_min_length = int(args[3]) # values = integers 
-
-    clustal_alignment = read_text(clustal_aln_file)
-    #print(clustal_alignment)
-
-    unfolded_alignment = unfold_alignment(clustal_alignment)
-    #print(unfolded_alignment)
-
-    homology_regions = get_homology_regions(unfolded_alignment[2], n_perfect_matches)
-    print(homology_regions)
-
-    non_homology_regions = ( [(0,homology_regions[0][0])] +
-                    [ (homology_regions[x][1], homology_regions[x+1][0]) for x in range(0,len(homology_regions)-1)] +
-                    [(homology_regions[-1][1], len(unfolded_alignment[2]))] )
-
-
-
-    # Iterate through non-homology-regions, and get all combinations of numbers within
-
-
-
-    seq_1_plus_1kb_file = 'MET12_flanking.fasta'
-    seq_2_plus_1kb_file = 'MET13_flanking.fasta'
-
-    seq1 = ''.join([x.strip() for x in open_fasta(seq_1_plus_1kb_file)][1:])
-    seq2 = ''.join([x.strip() for x in open_fasta(seq_2_plus_1kb_file)][1:])
-
-    # mylist = []
-    # for non_homology_range in non_homology_regions:
-    #     for i in range(non_homology_range[0], non_homology_range[1]):
-    #         seq1_index_i = i - unfolded_alignment[0][:i].count("-")
-    #         seq2_index_i = i - unfolded_alignment[1][:i].count("-")
-    #         for j in range(i, non_homology_range[1]):
-    #             seq1_index_j = j - unfolded_alignment[0][:i].count("-")
-    #             seq2_index_j = j - unfolded_alignment[1][:i].count("-")
-    #             seq1 [0:i]
-    #             seq2 [j:]
-    #             mylist.append((i,j))
-    # print(len(mylist))
-
-
-
-    d1 = get_index_offset(unfolded_alignment[0])
-    d2 = get_index_offset(unfolded_alignment[1])
-    #c = (  (d1[x],d2[x]) for y in non_homology_regions for x in range(y[0],y[1]))
-
-    c = return_combos(d1, d2, non_homology_regions)
-    print(len(list(c)))
 
 #######################################################################################################################
