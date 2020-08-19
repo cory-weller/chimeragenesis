@@ -133,6 +133,34 @@ def run_alignment(n_permutations, pep1, pep2, length, specificity):
         for _ in range(n_permutations):
             yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
+def translate(dna_filename): 
+    dna_seq = ''.join(list(map(str.strip, read_text(dna_filename).split('\n')[1:])))
+    table = { 
+        'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M', 
+        'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T', 
+        'AAC':'N', 'AAT':'N', 'AAA':'K', 'AAG':'K', 
+        'AGC':'S', 'AGT':'S', 'AGA':'R', 'AGG':'R',                  
+        'CTA':'L', 'CTC':'L', 'CTG':'L', 'CTT':'L', 
+        'CCA':'P', 'CCC':'P', 'CCG':'P', 'CCT':'P', 
+        'CAC':'H', 'CAT':'H', 'CAA':'Q', 'CAG':'Q', 
+        'CGA':'R', 'CGC':'R', 'CGG':'R', 'CGT':'R', 
+        'GTA':'V', 'GTC':'V', 'GTG':'V', 'GTT':'V', 
+        'GCA':'A', 'GCC':'A', 'GCG':'A', 'GCT':'A', 
+        'GAC':'D', 'GAT':'D', 'GAA':'E', 'GAG':'E', 
+        'GGA':'G', 'GGC':'G', 'GGG':'G', 'GGT':'G', 
+        'TCA':'S', 'TCC':'S', 'TCG':'S', 'TCT':'S', 
+        'TTC':'F', 'TTT':'F', 'TTA':'L', 'TTG':'L', 
+        'TAC':'Y', 'TAT':'Y', 'TAA':'*', 'TAG':'*', 
+        'TGC':'C', 'TGT':'C', 'TGA':'*', 'TGG':'W', 
+    } 
+    protein ="" 
+    try: assert len(dna) %3 == 0, "WARNING: dna sequence length in %s is not a multiple of 3. Truncating extra nucleotides." % (dna_filename)
+    except AssertionError as warning: print(warning)   
+    for i in range(0, len(dna), 3): 
+        codon = dna[i:i + 3] 
+        protein+= table[codon]     
+    return protein 
+
 # Unused
 # def write_permutations(permutations, n_permutations, outfile_name="permutations.out"):
 #     print("Writing %s permutations to %s" % (n_permutations, outfile_name))
@@ -199,7 +227,7 @@ if __name__ == "__main__":
                         help="Assist with debugging by increasing output verbosity",
                         action="store_true")
     parser.add_argument("-A", "--all", 
-                        help='''By default, CHIMERA will generate a list for only
+                        help='''By default, this program will generate a list for only
                                 potential chimeras where transitions between homologs
                                 occurs at a point of confident homology. Setting the
                                 --all flag will also generate chimeras with transitions
@@ -211,11 +239,22 @@ if __name__ == "__main__":
                         nargs='?',
                         const=1,
                         default=0,
-                        help='''Defines maximum number of added/removed
-                                codons, up to a (but not including) the next region
-                                of confident homology. See <figure> for explanation.
-                                To include all possible transitions, set to -1.
-                                 Default: 0''')
+                        help='''When generating chimeric protein sequences, INDEL is 
+                                the maximum number of codons added or removed by
+                                transitioning between two points offset from their
+                                codon partner in the alignment. See <figure> for 
+                                explanation. To include all possible transitions, set
+                                to -1. Default: 0 (only transition between codons at
+                                their partner in the alignment, with no offset).''')
+    parser.add_argument("-p", "--padding",
+                        type=int,
+                        nargs='?',
+                        const=1,
+                        default=1000,
+                        help='''Defines the number of nucleotides upstream and downstream
+                                of the genomic DNA for the gene of interest in the
+                                user-provided dna fasta file. Default value: 1000 bp,
+                                i.e. genomic dna +/- 1 kilobase.''')
     parser.add_argument("-L", "--length",
                         type=int,
                         nargs='?',
@@ -223,7 +262,9 @@ if __name__ == "__main__":
                         default=4,
                         help='''Minimum number of consecutive amino acids above the
                                 specificity threshold to determine a region of
-                                confident homology (defined by -S). Default: 4''')
+                                confident homology (defined by -S). Only used when
+                                manually testing alignments--routine use does not
+                                require this argument. Default: 4''')
     parser.add_argument("-s", "--specificity",
                         type=str,
                         nargs='?',
@@ -233,8 +274,9 @@ if __name__ == "__main__":
                                 Defines degree of amino acid similarity from clustal alignment
                                 for defining regions of confident homology. Used with -L.
                                 'low' includes [.:*], 'medium includes' [:*], 'high' includes [*].
-                                Default: high.''')
-    parser.add_argument("-p", "--permutations",
+                                 Only used when manually testing alignments--routine use 
+                                 does not require this argument. Default: high.''')
+    parser.add_argument("-r", "--permutations",
                         type=int,
                         nargs='?',
                         const=1,
