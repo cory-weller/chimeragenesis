@@ -11,7 +11,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "cwd": "${fileDirname}",
-            "args": ["-p", "2", "MET12.pep.fasta", "MET13.pep.fasta"],
+            "args": ["-p", "2", "-s", "medium", "-L", "4", "MET12.pep.fasta", "MET13.pep.fasta"],
         ]
         }
     ]

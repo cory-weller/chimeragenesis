@@ -169,7 +169,8 @@ class clustal_alignment:
         self.non_homology_regions = get_non_homology_regions(self.homology_regions, len(self.aln1))
         self.offset1 = get_index_offset(self.aln1)
         self.offset2 = get_index_offset(self.aln2)
-        self.combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions))
+        self.non_homology_combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions))
+        self.homology_combos = list(return_combos(self.offset1, self.offset2, self.homology_regions))
 
 #######################################################################################################################
 #                                                        MAIN
@@ -197,13 +198,32 @@ if __name__ == "__main__":
     parser.add_argument("-d", "--debug", 
                         help="Assist with debugging by increasing output verbosity",
                         action="store_true")
+    parser.add_argument("-A", "--all", 
+                        help='''By default, CHIMERA will generate a list for only
+                                potential chimeras where transitions between homologs
+                                occurs at a point of confident homology. Setting the
+                                --all flag will also generate chimeras with transitions
+                                outside of regions of confident homology. Used with
+                                -n, --indel. See <figure> for explanation.''',
+                        action="store_true")
+    parser.add_argument("-n", "--indel",
+                        type=int,
+                        nargs='?',
+                        const=1,
+                        default=0,
+                        help='''Defines maximum number of added/removed
+                                codons, up to a (but not including) the next region
+                                of confident homology. See <figure> for explanation.
+                                To include all possible transitions, set to -1.
+                                 Default: 0''')
     parser.add_argument("-L", "--length",
                         type=int,
                         nargs='?',
                         const=1,
                         default=4,
                         help='''Minimum number of consecutive amino acids above the
-                                specificity threshold (defined by -S). Default: 4''')
+                                specificity threshold to determine a region of
+                                confident homology (defined by -S). Default: 4''')
     parser.add_argument("-s", "--specificity",
                         type=str,
                         nargs='?',
@@ -285,25 +305,39 @@ if __name__ == "__main__":
         print("Building permutation generator for %s permutations..." % (args.permutations))
         permutations = run_alignment(args.permutations, pep1, pep2, args.length, args.specificity)
         print("Built permutation generator!")
-        with open(args.specificity + '.' + str(args.length) + '.permutations', 'w') as outfile:
-            outfile.write(                           
-                 '\t'.join(["specificity", "length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
-                        )
-            for i in permutations:
-                outfile.write(
-                            '\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
-                            )
+        for i in permutations:
+            print(i.homology_regions)
+            print(i.homology_combos)
+        # with open(args.specificity + '.' + str(args.length) + '.permutations', 'w') as outfile:
+        #     outfile.write(                           
+        #          '\t'.join(["specificity", "match_length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
+        #                 )
+        #     for i in permutations:
+        #         outfile.write(
+        #                     '\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
+        #                     )
     elif args.permutations == None:
         alignment = run_alignment(0, pep1, pep2, args.length, args.specificity)
         i = list(alignment)[0]
         if not os.path.isfile("true_alignment.out"):
             with open("true_alignment.out", 'w') as outfile:
                 outfile.write(                           
-                 '\t'.join(["specificity", "length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
+                 '\t'.join(["specificity", "match_length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
                         )
         with open("true_alignment.out", 'a') as outfile:
             outfile.write('\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n')
-# python3 chimera.py -s "high" -L 5  MET12.pep.fasta MET13.pep.fasta
+
     sys.exit("Exited successfully!")
 
 #######################################################################################################################
+# NOTES / TODO
+
+# Round 1 permutations to determine area to focus in on
+# Round 2 permutations to get best FDR
+# Option to just get indel = 0 chimeras
+# Option to only make chimeras within high confidence homology regions
+
+
+# Recently done:
+# added chimeras within the homology regions class.homology_combos
+# add speedup to ignore non_homology_combos if options don't want them

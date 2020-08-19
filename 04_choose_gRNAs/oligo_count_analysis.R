@@ -23,6 +23,8 @@ o[, specificity := factor(specificity, levels=c("low", "medium", "high"))]
 
 dat.long <- melt(o, measure.vars=c("homology_regions","n_chimeras"))
 
+true_counts <- fread('true_alignment.out')
+
 g <- ggplot(dat.long, aes(x=match_length, y=value, color=specificity)) +
 geom_boxplot() +
 facet_grid(variable~., scales="free") +
