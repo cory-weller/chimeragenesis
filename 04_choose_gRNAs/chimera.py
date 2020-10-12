@@ -74,11 +74,6 @@ def get_overall_score(score):
     overall_score = float(len(perfect_align)) / (len(perfect_align) + len(nonperfect_align) + len(gaps))
     return [overall_score, total_align_length, total_gap_length, len(perfect_align), len(nonperfect_align), len(gaps)]
 
-def open_fasta(filename):
-    with open(filename, "r") as infile:
-        fasta_text = infile.readlines()
-        return fasta_text
-
 def get_index_offset(seq):
     seq_offset = []
     index_value = -1
@@ -134,8 +129,12 @@ def run_alignment(n_permutations, pep1, pep2, length, specificity):
         for _ in range(n_permutations):
             yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
-def translate(dna_filename): 
-    dna_seq = ''.join(list(map(str.strip, read_text(dna_filename).split('\n')[1:])))
+def generate_repair_templates(all_recombination_points, pep1, pep2, dna1, dna2, upstream, downstream):
+    for recombination_point in all_recombination_points:
+        yield(repair_template(recombination_point, pep1, pep2, dna1, dna2, upstream, downstream))
+ 
+def translate(dna_seq): 
+    dna_seq = dna_seq.upper()
     table = { 
         'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M', 
         'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T', 
@@ -155,10 +154,13 @@ def translate(dna_filename):
         'TGC':'C', 'TGT':'C', 'TGA':'*', 'TGG':'W', 
     } 
     protein ="" 
-    try: assert len(dna) %3 == 0, "WARNING: dna sequence length in %s is not a multiple of 3. Truncating extra nucleotides." % (dna_filename)
-    except AssertionError as warning: print(warning)   
-    for i in range(0, len(dna), 3): 
-        codon = dna[i:i + 3] 
+    try: assert len(dna_seq) %3 == 0, "WARNING: dna sequence length is not a multiple of 3. Truncating extra nucleotides."
+    except AssertionError as warning:
+        print(warning)
+        excess = len(dna_seq) % 3
+        dna_seq = dna_seq[:(-1*excess)]
+    for i in range(0, len(dna_seq), 3): 
+        codon = dna_seq[i:i + 3] 
         protein+= table[codon]     
     return protein 
 
@@ -201,6 +203,28 @@ class clustal_alignment:
         self.non_homology_combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions, args.max_indel))
         self.homology_combos = list(return_combos(self.offset1, self.offset2, self.homology_regions, args.max_indel))
 
+class repair_template:
+    help = 'repair template for generating an intended chimera'
+    def __init__(self, recombination_point, pep1, pep2, dna1, dna2, upstream, downstream):
+        self.idx1 = recombination_point[0] * 3
+        self.idx2 = recombination_point[1] * 3
+        self.dna1 = dna1
+        self.dna2 = dna2
+        self.pep1 = pep1
+        self.pep2 = pep2
+        self.dnaSeq1 = dna1[0:self.idx1]
+        self.dnaSeq2 = dna2[self.idx2:]
+        self.dnaChimera = self.dnaSeq1 + self.dnaSeq2
+        self.pepChimera = translate(self.dnaChimera)
+
+class fasta:
+    help = 'stores type, header, and sequence information for FASTA files'
+    def __init__(self, filename):
+        with open(filename, 'r') as infile:
+            text = infile.readlines()
+        self.header = text[0].replace(">","").strip()
+        self.seq = ''.join(x.rstrip() for x in text[1:])
+        
 #######################################################################################################################
 #                                                        MAIN
 #######################################################################################################################
@@ -220,10 +244,10 @@ if __name__ == "__main__":
     from subprocess import PIPE
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('pep1_filename', metavar='pep1.fasta', type=str,
-                        help='First peptide fasta file')
-    parser.add_argument('pep2_filename', metavar='pep2.fasta', type=str,
-                        help='Second peptide fasta file')
+    parser.add_argument('gene1_filestem', type=str,
+                        help='File stem for gene 1. Ensure proper naming of <GENE1_FILESTEM>.pep.fasta and <GENE1_FILESTEM>.cdna.fasta')
+    parser.add_argument('gene2_filestem', type=str,
+                        help='File stem for gene 2. Ensure proper naming of <GENE2_FILESTEM>.pep.fasta and <GENE2_FILESTEM>.cdna.fasta')
     parser.add_argument("-d", "--debug", 
                         help="Assist with debugging by increasing output verbosity",
                         action="store_true")
@@ -333,7 +357,10 @@ if __name__ == "__main__":
     ##################
 
     missing_files = 0
-    for filename in [args.pep1_filename, args.pep2_filename, "upstream.fasta", "downstream.fasta"]:
+    for filename in [   args.gene1_filestem + '.cdna.fasta',
+                        args.gene2_filestem + '.cdna.fasta',
+                        "upstream.fasta", 
+                        "downstream.fasta"]:
         if not os.path.isfile(filename):
             print("Error: File %s does not exist" % filename)
             missing_files += 1
@@ -351,23 +378,46 @@ if __name__ == "__main__":
     # RUN CODE #
     ############
 
-    pep1 = read_text(args.pep1_filename).rstrip() + "\n"    # Ensures file ends with newline
-    pep2 = read_text(args.pep2_filename).rstrip() + "\n"    # Ensures file ends with newline
+    #pep1 = read_text(args.gene1_filestem + '.pep.fasta').rstrip() + "\n"    # Ensures file ends with newline. Required in this format for clustal
+    #pep2 = read_text(args.gene2_filestem + '.pep.fasta').rstrip() + "\n"    # Ensures file ends with newline Required in this format for clustal
 
-    alignment = list(run_alignment(0, pep1, pep2, args.length, args.specificity))[0]
+    #
 
-    upstream = ''.join([x.rstrip() for x in open_fasta("upstream.fasta")[1:]])
-    downstream = ''.join([x.rstrip() for x in open_fasta("downstream.fasta")[1:]])
+    dna1 = fasta(args.gene1_filestem + '.cdna.fasta')
+    dna2 = fasta(args.gene2_filestem + '.cdna.fasta')
 
+    pep1 = lambda: None
+    pep2 = lambda: None
 
-    print(alignment.aln1)
-    print(alignment.offset1)
-    print(alignment.aln2)
-    print(alignment.offset2)
-    print(alignment.non_homology_combos)
-    print(str(args.repair_template_length))
-    print(upstream)
-    print(downstream)
+    pep1.header = args.gene1_filestem
+    pep1.seq = translate(dna1.seq)
+    pep2.header = args.gene2_filestem
+    pep2.seq = translate(dna2.seq)
+
+    pep_txt1 = '>%s\n%s\n' % (args.gene1_filestem, pep1.seq)
+    pep_txt2 = '>%s\n%s\n' % (args.gene2_filestem, pep2.seq)
+
+    alignment = list(run_alignment(0, pep_txt1, pep_txt2, args.length, args.specificity))[0]
+
+    upstream = ''.join([x.rstrip() for x in read_text("upstream.fasta")[1:]])
+    downstream = ''.join([x.rstrip() for x in read_text("downstream.fasta")[1:]])
+
+    RTs = generate_repair_templates(alignment.non_homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream, downstream)
+
+    for template in RTs:
+        print(template.pepChimera)
+        print(template.dnaChimera)
+
+    #print(alignment.aln1)
+    #print(alignment.offset1)
+    #print(alignment.aln2)
+    #print(alignment.offset2)
+    #print(alignment.non_homology_combos)
+    #print(alignment.homology_combos)
+
+    #print(str(args.repair_template_length))
+    #print(upstream)
+    #print(downstream)
 
   #  print(alignment.non_homology_combos)
 
