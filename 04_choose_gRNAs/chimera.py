@@ -90,14 +90,15 @@ def get_index_offset(seq):
             seq_offset.append("NA")
     return seq_offset
 
-def return_combos(dict1, dict2, ranges):
+def return_combos(dict1, dict2, ranges, max_indel):
     for i in ranges:
         for start in range(i[0], i[1]):
             for end in range(start, i[1]):
-                value1 = dict1[start]
-                value2 = dict2[end]
-                if not (value1 == 'NA' or value2 == 'NA'):
-                    yield(dict1[start], dict2[end])
+                if abs(end - start) <= max_indel or max_indel == -1:
+                    value1 = dict1[start]
+                    value2 = dict2[end]
+                    if not (value1 == 'NA' or value2 == 'NA'):
+                        yield(value1, value2)
                 else:
                     continue
 
@@ -197,8 +198,8 @@ class clustal_alignment:
         self.non_homology_regions = get_non_homology_regions(self.homology_regions, len(self.aln1))
         self.offset1 = get_index_offset(self.aln1)
         self.offset2 = get_index_offset(self.aln2)
-        self.non_homology_combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions))
-        self.homology_combos = list(return_combos(self.offset1, self.offset2, self.homology_regions))
+        self.non_homology_combos = list(return_combos(self.offset1, self.offset2, self.non_homology_regions, args.max_indel))
+        self.homology_combos = list(return_combos(self.offset1, self.offset2, self.homology_regions, args.max_indel))
 
 #######################################################################################################################
 #                                                        MAIN
@@ -234,7 +235,7 @@ if __name__ == "__main__":
                                 outside of regions of confident homology. Used with
                                 -n, --indel. See <figure> for explanation.''',
                         action="store_true")
-    parser.add_argument("-n", "--indel",
+    parser.add_argument("-n", "--max-indel",
                         type=int,
                         nargs='?',
                         const=1,
@@ -265,6 +266,15 @@ if __name__ == "__main__":
                                 confident homology (defined by -S). Only used when
                                 manually testing alignments--routine use does not
                                 require this argument. Default: 4''')
+    parser.add_argument("-t", "--repair-template-length",
+                        type=int,
+                        nargs='?',
+                        const=1,
+                        default=50,
+                        help='''Length of repair template. Half the length will
+                                be allocated to the first sequence, and half 
+                                to the second sequence. Will be rounded down
+                                by one if an odd integer is supplied.  Default: 50''')
     parser.add_argument("-s", "--specificity",
                         type=str,
                         nargs='?',
@@ -291,7 +301,6 @@ if __name__ == "__main__":
                         nargs='?',
                         const=1,
                         default="prot")
-
     args = parser.parse_args()
     if args.debug:
         debug = True
@@ -324,7 +333,7 @@ if __name__ == "__main__":
     ##################
 
     missing_files = 0
-    for filename in [args.pep1_filename, args.pep2_filename]:
+    for filename in [args.pep1_filename, args.pep2_filename, "upstream.fasta", "downstream.fasta"]:
         if not os.path.isfile(filename):
             print("Error: File %s does not exist" % filename)
             missing_files += 1
@@ -333,6 +342,8 @@ if __name__ == "__main__":
         missing_files += 1
     if missing_files > 0:
         sys.exit("Aborting due to missing files")
+    if args.repair_template_length % 2 != 0:
+        args.repair_template_length -= 1
 
 #######################################################################################################################
 
@@ -343,6 +354,28 @@ if __name__ == "__main__":
     pep1 = read_text(args.pep1_filename).rstrip() + "\n"    # Ensures file ends with newline
     pep2 = read_text(args.pep2_filename).rstrip() + "\n"    # Ensures file ends with newline
 
+    alignment = list(run_alignment(0, pep1, pep2, args.length, args.specificity))[0]
+
+    upstream = ''.join([x.rstrip() for x in open_fasta("upstream.fasta")[1:]])
+    downstream = ''.join([x.rstrip() for x in open_fasta("downstream.fasta")[1:]])
+
+
+    print(alignment.aln1)
+    print(alignment.offset1)
+    print(alignment.aln2)
+    print(alignment.offset2)
+    print(alignment.non_homology_combos)
+    print(str(args.repair_template_length))
+    print(upstream)
+    print(downstream)
+
+  #  print(alignment.non_homology_combos)
+
+
+    #print(alignment.non_homology_combos)
+
+    sys.exit("exit early")
+
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
         permutations = run_alignment(args.permutations, pep1, pep2, args.length, args.specificity)
@@ -350,14 +383,7 @@ if __name__ == "__main__":
         for i in permutations:
             print(i.homology_regions)
             print(i.homology_combos)
-        # with open(args.specificity + '.' + str(args.length) + '.permutations', 'w') as outfile:
-        #     outfile.write(                           
-        #          '\t'.join(["specificity", "match_length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
-        #                 )
-        #     for i in permutations:
-        #         outfile.write(
-        #                     '\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n'
-        #                     )
+
     elif args.permutations == None:
         alignment = run_alignment(0, pep1, pep2, args.length, args.specificity)
         i = list(alignment)[0]
@@ -367,7 +393,7 @@ if __name__ == "__main__":
                  '\t'.join(["specificity", "match_length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
                         )
         with open("true_alignment.out", 'a') as outfile:
-            outfile.write('\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.combos)]]) + '\n')
+            outfile.write('\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.homology_combos)]]) + '\n')
 
     sys.exit("Exited successfully!")
 
@@ -378,8 +404,3 @@ if __name__ == "__main__":
 # Round 2 permutations to get best FDR
 # Option to just get indel = 0 chimeras
 # Option to only make chimeras within high confidence homology regions
-
-
-# Recently done:
-# added chimeras within the homology regions class.homology_combos
-# add speedup to ignore non_homology_combos if options don't want them

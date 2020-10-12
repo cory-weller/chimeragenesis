@@ -5,3 +5,4 @@
 *.gvcf.gz
 *.fa.gz
 *.tbi
+*.fasta
