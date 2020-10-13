@@ -129,9 +129,9 @@ def run_alignment(n_permutations, pep1, pep2, length, specificity):
         for _ in range(n_permutations):
             yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
-def generate_repair_templates(all_recombination_points, pep1, pep2, dna1, dna2, upstream, downstream):
+def generate_repair_templates(all_recombination_points, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
     for recombination_point in all_recombination_points:
-        yield(repair_template(recombination_point, pep1, pep2, dna1, dna2, upstream, downstream))
+        yield(repair_template(recombination_point, pep1, pep2, dna1, dna2, upstream, downstream, homology_length))
  
 def translate(dna_seq): 
     dna_seq = dna_seq.upper()
@@ -205,17 +205,21 @@ class clustal_alignment:
 
 class repair_template:
     help = 'repair template for generating an intended chimera'
-    def __init__(self, recombination_point, pep1, pep2, dna1, dna2, upstream, downstream):
+    def __init__(self, recombination_point, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
         self.idx1 = recombination_point[0] * 3
         self.idx2 = recombination_point[1] * 3
         self.dna1 = dna1
         self.dna2 = dna2
         self.pep1 = pep1
         self.pep2 = pep2
+        self.homology_length = int(homology_length)
         self.dnaSeq1 = dna1[0:self.idx1]
         self.dnaSeq2 = dna2[self.idx2:]
         self.dnaChimera = self.dnaSeq1 + self.dnaSeq2
         self.pepChimera = translate(self.dnaChimera)
+        self.homologyLeft = self.dnaSeq1[-(self.homology_length):]
+        self.homologyRight =  self.dnaSeq2[:(self.homology_length)]
+        self.rt = self.homologyLeft + self.homologyRight 
 
 class fasta:
     help = 'stores type, header, and sequence information for FASTA files'
@@ -248,10 +252,10 @@ if __name__ == "__main__":
                         help='File stem for gene 1. Ensure proper naming of <GENE1_FILESTEM>.pep.fasta and <GENE1_FILESTEM>.cdna.fasta')
     parser.add_argument('gene2_filestem', type=str,
                         help='File stem for gene 2. Ensure proper naming of <GENE2_FILESTEM>.pep.fasta and <GENE2_FILESTEM>.cdna.fasta')
-    parser.add_argument("-d", "--debug", 
+    parser.add_argument("--debug", 
                         help="Assist with debugging by increasing output verbosity",
                         action="store_true")
-    parser.add_argument("-A", "--all", 
+    parser.add_argument("--all", 
                         help='''By default, this program will generate a list for only
                                 potential chimeras where transitions between homologs
                                 occurs at a point of confident homology. Setting the
@@ -259,64 +263,64 @@ if __name__ == "__main__":
                                 outside of regions of confident homology. Used with
                                 -n, --indel. See <figure> for explanation.''',
                         action="store_true")
-    parser.add_argument("-n", "--max-indel",
+    parser.add_argument("--max-indel",
                         type=int,
                         nargs='?',
                         const=1,
                         default=0,
-                        help='''When generating chimeric protein sequences, INDEL is 
+                        help='''Integer. When generating chimeric protein sequences, INDEL is 
                                 the maximum number of codons added or removed by
                                 transitioning between two points offset from their
                                 codon partner in the alignment. See <figure> for 
                                 explanation. To include all possible transitions, set
                                 to -1. Default: 0 (only transition between codons at
                                 their partner in the alignment, with no offset).''')
-    parser.add_argument("-p", "--padding",
+    parser.add_argument("--padding",
                         type=int,
                         nargs='?',
                         const=1,
                         default=1000,
-                        help='''Defines the number of nucleotides upstream and downstream
+                        help='''Integer. Defines the number of nucleotides upstream and downstream
                                 of the genomic DNA for the gene of interest in the
                                 user-provided dna fasta file. Default value: 1000 bp,
                                 i.e. genomic dna +/- 1 kilobase.''')
-    parser.add_argument("-L", "--length",
+    parser.add_argument("--threshold-length",
                         type=int,
                         nargs='?',
                         const=1,
                         default=4,
-                        help='''Minimum number of consecutive amino acids above the
+                        help='''Integer. Minimum number of consecutive amino acids above the
                                 specificity threshold to determine a region of
                                 confident homology (defined by -S). Only used when
                                 manually testing alignments--routine use does not
                                 require this argument. Default: 4''')
-    parser.add_argument("-t", "--repair-template-length",
+    parser.add_argument("--repair-template-length",
                         type=int,
                         nargs='?',
                         const=1,
-                        default=50,
-                        help='''Length of repair template. Half the length will
+                        default=120,
+                        help='''Integer. Length of repair template. Half the length will
                                 be allocated to the first sequence, and half 
                                 to the second sequence. Will be rounded down
                                 by one if an odd integer is supplied.  Default: 50''')
-    parser.add_argument("-s", "--specificity",
+    parser.add_argument("--specificity",
                         type=str,
                         nargs='?',
                         const=1,
                         default="high",
-                        help='''Accepts 'low' 'medium' or 'high'.
+                        help='''String, accepts 'low' 'medium' or 'high'.
                                 Defines degree of amino acid similarity from clustal alignment
                                 for defining regions of confident homology. Used with -L.
                                 'low' includes [.:*], 'medium includes' [:*], 'high' includes [*].
                                  Only used when manually testing alignments--routine use 
                                  does not require this argument. Default: high.''')
-    parser.add_argument("-r", "--permutations",
+    parser.add_argument("--permutations",
                         type=int,
                         nargs='?',
                         const=1,
-                        help = '''Number of alignment permutations to run. Default: 100.''')
-    parser.add_argument("-u", "--unique", 
-                        help='''Accepts 'prot' or 'dna'. 
+                        help = '''Interger. Number of alignment permutations to run. Default: 100.''')
+    parser.add_argument("--unique", 
+                        help='''String, accepts 'prot' or 'dna'. 
                                 Default 'prot' will deduplicate oligo sequences, retaining one representative
                                 for a given protein sequence. 'dna' will retain identical dna sequences,
                                 with the possibility of duplicate resulting protein sequences (which may be of
@@ -325,6 +329,13 @@ if __name__ == "__main__":
                         nargs='?',
                         const=1,
                         default="prot")
+    parser.add_argument("--flanking", 
+                        help='''String. Defines the file stem signifying flanking regions upstream and downstream the
+                                homologous genes, i.e. <FILE_STEM>.upstream and <FILE_STEM>.downstream.''',
+                        type=str,
+                        nargs='?',
+                        const=1,
+                        default="flanking")
     args = parser.parse_args()
     if args.debug:
         debug = True
@@ -333,7 +344,7 @@ if __name__ == "__main__":
         debug = False
 
     if debug == True:
-        print("""running with length = %s and specificity = %s""" % (args.length, args.specificity))
+        print("""running with length = %s and specificity = %s""" % (args.threshold_length, args.specificity))
 
 #######################################################################################################################
 
@@ -341,7 +352,7 @@ if __name__ == "__main__":
     # VALIDATE ARGUMENTS #
     ######################
 
-    try: assert args.length > 0, "ERROR: length must be > 0"
+    try: assert args.threshold_length > 0, "ERROR: length must be > 0"
     except AssertionError as error: sys.exit(error)
 
     try: assert args.specificity in ["low", "medium", "high"], "ERROR: -s, --specificity must be 'low', 'medium', or 'high'"
@@ -357,10 +368,10 @@ if __name__ == "__main__":
     ##################
 
     missing_files = 0
-    for filename in [   args.gene1_filestem + '.cdna.fasta',
-                        args.gene2_filestem + '.cdna.fasta',
-                        "upstream.fasta", 
-                        "downstream.fasta"]:
+    for filename in [   args.gene1_filestem + '.cds.fasta',
+                        args.gene2_filestem + '.cds.fasta',
+                        args.flanking +  ".upstream.fasta", 
+                        args.flanking + ".downstream.fasta"]:
         if not os.path.isfile(filename):
             print("Error: File %s does not exist" % filename)
             missing_files += 1
@@ -371,6 +382,7 @@ if __name__ == "__main__":
         sys.exit("Aborting due to missing files")
     if args.repair_template_length % 2 != 0:
         args.repair_template_length -= 1
+    homology_length = args.repair_template_length / 2
 
 #######################################################################################################################
 
@@ -381,10 +393,11 @@ if __name__ == "__main__":
     #pep1 = read_text(args.gene1_filestem + '.pep.fasta').rstrip() + "\n"    # Ensures file ends with newline. Required in this format for clustal
     #pep2 = read_text(args.gene2_filestem + '.pep.fasta').rstrip() + "\n"    # Ensures file ends with newline Required in this format for clustal
 
-    #
 
-    dna1 = fasta(args.gene1_filestem + '.cdna.fasta')
-    dna2 = fasta(args.gene2_filestem + '.cdna.fasta')
+
+    dna1 = fasta(args.gene1_filestem + '.cds.fasta')
+    dna2 = fasta(args.gene2_filestem + '.cds.fasta')
+
 
     pep1 = lambda: None
     pep2 = lambda: None
@@ -394,19 +407,15 @@ if __name__ == "__main__":
     pep2.header = args.gene2_filestem
     pep2.seq = translate(dna2.seq)
 
+
     pep_txt1 = '>%s\n%s\n' % (args.gene1_filestem, pep1.seq)
     pep_txt2 = '>%s\n%s\n' % (args.gene2_filestem, pep2.seq)
 
-    alignment = list(run_alignment(0, pep_txt1, pep_txt2, args.length, args.specificity))[0]
+    alignment = list(run_alignment(0, pep_txt1, pep_txt2, args.threshold_length, args.specificity))[0]
 
-    upstream = ''.join([x.rstrip() for x in read_text("upstream.fasta")[1:]])
-    downstream = ''.join([x.rstrip() for x in read_text("downstream.fasta")[1:]])
+    upstream = fasta(args.flanking + ".upstream.fasta")
+    downstream = fasta(args.flanking + ".downstream.fasta")
 
-    RTs = generate_repair_templates(alignment.non_homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream, downstream)
-
-    for template in RTs:
-        print(template.pepChimera)
-        print(template.dnaChimera)
 
     #print(alignment.aln1)
     #print(alignment.offset1)
@@ -415,9 +424,26 @@ if __name__ == "__main__":
     #print(alignment.non_homology_combos)
     #print(alignment.homology_combos)
 
-    #print(str(args.repair_template_length))
     #print(upstream)
     #print(downstream)
+    
+    non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
+    homology_RTs = generate_repair_templates(alignment.homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
+
+    unique_chimeras = []
+
+    for template in non_homology_RTs:
+        if(template.pepChimera) not in unique_chimeras:
+            unique_chimeras.append(template.pepChimera)
+            #print(template.pepChimera)
+            print(template.rt)
+    for template in homology_RTs:
+        if(template.pepChimera) not in unique_chimeras:
+            unique_chimeras.append(template.pepChimera)
+            #print(template.pepChimera)
+            print(template.rt)
+
+
 
   #  print(alignment.non_homology_combos)
 
@@ -428,14 +454,14 @@ if __name__ == "__main__":
 
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
-        permutations = run_alignment(args.permutations, pep1, pep2, args.length, args.specificity)
+        permutations = run_alignment(args.permutations, pep1, pep2, args.threshold_length, args.specificity)
         print("Built permutation generator!")
         for i in permutations:
             print(i.homology_regions)
             print(i.homology_combos)
 
     elif args.permutations == None:
-        alignment = run_alignment(0, pep1, pep2, args.length, args.specificity)
+        alignment = run_alignment(0, pep1, pep2, args.threshold_length, args.specificity)
         i = list(alignment)[0]
         if not os.path.isfile("true_alignment.out"):
             with open("true_alignment.out", 'w') as outfile:
@@ -443,7 +469,7 @@ if __name__ == "__main__":
                  '\t'.join(["specificity", "match_length", "homology_regions", "alignment_length", "n_chimeras"]) + '\n'
                         )
         with open("true_alignment.out", 'a') as outfile:
-            outfile.write('\t'.join([str(x) for x in [args.specificity, args.length, len(i.homology_regions), len(i.aln1), len(i.homology_combos)]]) + '\n')
+            outfile.write('\t'.join([str(x) for x in [args.specificity, args.threshold_length, len(i.homology_regions), len(i.aln1), len(i.homology_combos)]]) + '\n')
 
     sys.exit("Exited successfully!")
 
