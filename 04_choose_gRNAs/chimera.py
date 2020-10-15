@@ -219,6 +219,14 @@ class repair_template:
         self.pepChimera = translate(self.dnaChimera)
         self.homologyLeft = self.dnaSeq1[-(self.homology_length):]
         self.homologyRight =  self.dnaSeq2[:(self.homology_length)]
+        # .padLeft and .padRight indicate # of nucleotides missing from left or right repair template
+        self.padLeft = self.homology_length - len(self.homologyLeft)
+        self.padRight = self.homology_length - len(self.homologyRight)
+        if self.padLeft > 0:
+            self.homologyLeft = upstream[-(self.padLeft):] + self.homologyLeft
+        if self.padRight > 0:
+            self.homologyRight = self.homologyRight + downstream[:(self.padRight)]
+
         self.rt = self.homologyLeft + self.homologyRight 
 
 class fasta:
