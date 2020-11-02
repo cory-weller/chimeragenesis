@@ -5,6 +5,5 @@
 *.gvcf.gz
 *.fa.gz
 *.tbi
-*.fasta
 *.json
 *.tab
