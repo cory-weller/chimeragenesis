@@ -8,12 +8,5 @@ with open("codonTable.txt", "r") as infile:
 
 entries = [inputText[x:(x+5)] for x in range(0, len(inputText), 5)]
 
-codons = []
-
 for row in entries:
     print('\t'.join([str(x) for x in row]))
-    codon, AA = row[0:2]
-    codons[codon] = AA
-
-
-
