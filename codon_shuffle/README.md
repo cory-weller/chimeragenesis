@@ -25,3 +25,8 @@ The contents of `codonTable.txt` is parsed and processed by `printCodons.py` int
 ( if [ ! -f "codons.tab" ]; then python3 formatCodons.py > "codons.tab"; fi )
 ```
 
+Generate shuffled sequences
+```
+Rscript shuffle.R PCA1.cds.fasta CAD2.cds.fasta
+cat *.tmp | fold > CAD2.shuffled.fasta && rm *.tmp
+```
