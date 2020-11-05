@@ -13,12 +13,6 @@ I created five fasta files for the multiple versions of the CAD2 allele being us
 
 # Generating repair templates
 
-```
-
-parallel -j 1 python3 ./chimera.py  {1} {2} --flanking PCA1 --repair-template-length {3} ::: PCA1 ::: CAD2 ::: 
-
-```
-
 ## Show the method works
 Using longest repair templates (80 bp for each, or 160 bp total) and most diverged CAD2 sequence
 ```
