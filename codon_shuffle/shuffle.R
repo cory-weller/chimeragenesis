@@ -100,6 +100,7 @@ getStringDistance <- function(a, b) {
 }
 
 fasta_1_collapsed <- paste0(fasta_1, collapse="")
+fasta_2_collapsed <- paste0(fasta_2, collapse="")
 
 set.seed(1)
 

@@ -129,9 +129,9 @@ def run_alignment(n_permutations, pep1, pep2, length, specificity):
         for _ in range(n_permutations):
             yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
-def generate_repair_templates(all_recombination_points, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
+def generate_repair_templates(all_recombination_points, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
     for recombination_point in all_recombination_points:
-        yield(repair_template(recombination_point, pep1, pep2, dna1, dna2, upstream, downstream, homology_length))
+        yield(repair_template(recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length))
  
 def translate(dna_seq): 
     dna_seq = dna_seq.upper()
@@ -205,13 +205,15 @@ class clustal_alignment:
 
 class repair_template:
     help = 'repair template for generating an intended chimera'
-    def __init__(self, recombination_point, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
+    def __init__(self, recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
         self.idx1 = recombination_point[0] * 3
         self.idx2 = recombination_point[1] * 3
         self.dna1 = dna1
         self.dna2 = dna2
         self.pep1 = pep1
         self.pep2 = pep2
+        self.gene1 = gene1
+        self.gene2 = gene2
         self.homology_length = int(homology_length)
         self.dnaSeq1 = dna1[0:self.idx1]
         self.dnaSeq2 = dna2[self.idx2:]
@@ -226,8 +228,8 @@ class repair_template:
             self.homologyLeft = upstream[-(self.padLeft):] + self.homologyLeft
         if self.padRight > 0:
             self.homologyRight = self.homologyRight + downstream[:(self.padRight)]
-
-        self.rt = self.homologyLeft + self.homologyRight 
+        self.rt = self.homologyLeft + self.homologyRight
+        self.rt_formatted = ">%s:Start-%s|%s:%s-End|RT:%s_nt_each\n%s" % (self.gene1, self.idx1, self.gene2, self.idx2+1, self.homology_length, wrap_fasta(self.rt))
 
 class fasta:
     help = 'stores type, header, and sequence information for FASTA files'
@@ -236,7 +238,8 @@ class fasta:
             text = infile.readlines()
         self.header = text[0].replace(">","").strip()
         self.seq = ''.join(x.rstrip() for x in text[1:])
-        
+
+
 #######################################################################################################################
 #                                                        MAIN
 #######################################################################################################################
@@ -328,7 +331,7 @@ if __name__ == "__main__":
                         const=1,
                         help = '''Interger. Number of alignment permutations to run. Default: 100.''')
     parser.add_argument("--unique", 
-                        help='''String, accepts 'prot' or 'dna'. 
+                        help='''String, accepts 'protein' or 'dna'. 
                                 Default 'prot' will deduplicate oligo sequences, retaining one representative
                                 for a given protein sequence. 'dna' will retain identical dna sequences,
                                 with the possibility of duplicate resulting protein sequences (which may be of
@@ -366,7 +369,7 @@ if __name__ == "__main__":
     try: assert args.specificity in ["low", "medium", "high"], "ERROR: -s, --specificity must be 'low', 'medium', or 'high'"
     except AssertionError as error: sys.exit(error)
 
-    try: assert args.unique in ["prot", "dna"], "ERROR: -u, --unique must be 'prot' or 'dna'"
+    try: assert args.unique in ["protein", "dna"], "ERROR: -u, --unique must be 'prot' or 'dna'"
     except AssertionError as error: sys.exit(error)
     
 #######################################################################################################################
@@ -435,21 +438,29 @@ if __name__ == "__main__":
     #print(upstream)
     #print(downstream)
     
-    non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
-    homology_RTs = generate_repair_templates(alignment.homology_combos, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
+    non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
+    homology_RTs = generate_repair_templates(alignment.homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
 
     unique_chimeras = []
 
-    for template in non_homology_RTs:
-        if(template.pepChimera) not in unique_chimeras:
-            unique_chimeras.append(template.pepChimera)
-            #print(template.pepChimera)
-            print(template.rt)
-    for template in homology_RTs:
-        if(template.pepChimera) not in unique_chimeras:
-            unique_chimeras.append(template.pepChimera)
-            #print(template.pepChimera)
-            print(template.rt)
+    if args.unique == "protein":
+        for template in non_homology_RTs:
+            if(template.pepChimera) not in unique_chimeras:
+                unique_chimeras.append(template.pepChimera)
+                print(template.rt_formatted)
+        for template in homology_RTs:
+            if(template.pepChimera) not in unique_chimeras:
+                unique_chimeras.append(template.pepChimera)
+                print(template.rt_formatted)
+    elif args.unique == "dna":
+        for template in non_homology_RTs:
+            if(template.dnaChimera) not in unique_chimeras:
+                unique_chimeras.append(template.dnaChimera)
+                print(template.rt_formatted)
+        for template in homology_RTs:
+            if(template.dnaChimera) not in unique_chimeras:
+                unique_chimeras.append(template.dnaChimera)
+                print(template.rt_formatted)
 
 
 
@@ -458,7 +469,7 @@ if __name__ == "__main__":
 
     #print(alignment.non_homology_combos)
 
-    sys.exit("exit early")
+    sys.exit()
 
     if not args.permutations == None:
         print("Building permutation generator for %s permutations..." % (args.permutations))
