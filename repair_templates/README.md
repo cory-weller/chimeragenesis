@@ -54,5 +54,5 @@ mkdir -p 03_synonymous_RT
 python3 ./chimera.py  PCA1 CAD2.55 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/PCA1_CAD2.55.RT-160-syn.fasta
 python3 ./chimera.py  CAD2.55 PCA1 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/CAD2.55_PCA1.RT-160-syn.fasta
 
-# 1193 RTs each * 2 = 2386
+# 1217 RTs each * 2 = 2434
 ```
