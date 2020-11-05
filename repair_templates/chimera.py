@@ -454,12 +454,8 @@ if __name__ == "__main__":
                 print(template.rt_formatted)
     elif args.unique == "dna":
         for template in non_homology_RTs:
-            if(template.dnaChimera) not in unique_chimeras:
-                unique_chimeras.append(template.dnaChimera)
                 print(template.rt_formatted)
         for template in homology_RTs:
-            if(template.dnaChimera) not in unique_chimeras:
-                unique_chimeras.append(template.dnaChimera)
                 print(template.rt_formatted)
 
 
