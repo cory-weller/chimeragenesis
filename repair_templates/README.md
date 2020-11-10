@@ -4,13 +4,6 @@ Add nucleotide sequences upstream and downstream of the original genome location
 
 I took the `Genomic DNA +/- 1kb` fasta from [SGD](https://www.yeastgenome.org/locus/S000000499#sequence). The first 1000 nucleotides made `PCA1.upstream` and last 1000 nucleotides made `PCA1.downstream`.
 
-I created five fasta files for the multiple versions of the CAD2 allele being used for chimeragenesis, Reflecting the % identity shared with `PCA1.cds.fasta` (the original CAD2 allele is 98.6% similar to PCA1).
- * `CAD2.55.cds.fasta`
- * `CAD2.65.cds.fasta`
- * `CAD2.74.cds.fasta`
- * `CAD2.87.cds.fasta`
- * `CAD2.986.cds.fasta`
-
 # Generating repair templates
 
 ## Show the method works

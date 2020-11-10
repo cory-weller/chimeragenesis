@@ -110,31 +110,33 @@ shuffled_low <- paste0(mapply(codonShuffle, seq_1_codon_static = fasta_1, seq_2_
 shuffled_high <- paste0(mapply(codonShuffle, seq_1_codon_static = fasta_1, seq_2_codon_to_shuffle = fasta_2, method="high"), collapse="")
 shuffled_medium <- paste0(mapply(codonShuffle, seq_1_codon_static = fasta_1, seq_2_codon_to_shuffle = fasta_2, method="medium"), collapse="")
 
-n_min <- getStringDistance(shuffled_min, fasta_1_collapsed)
-percent_min <- format(100 * (1 - (n_min / nchar(fasta_1_collapsed))), digits = 5, format = "f")
+# n_min <- getStringDistance(shuffled_min, fasta_1_collapsed)
+# percent_min <- format(100 * (1 - (n_min / nchar(fasta_1_collapsed))), digits = 5, format = "f")
 
-n_low <- getStringDistance(shuffled_low, fasta_1_collapsed)
-percent_low <- format(100 * (1 - (n_low / nchar(fasta_1_collapsed))), digits = 5, format = "f")
+# n_low <- getStringDistance(shuffled_low, fasta_1_collapsed)
+# percent_low <- format(100 * (1 - (n_low / nchar(fasta_1_collapsed))), digits = 5, format = "f")
 
-n_medium <- getStringDistance(shuffled_medium, fasta_1_collapsed)
-percent_medium <- format(100 * (1 - (n_medium / nchar(fasta_1_collapsed))), digits = 5, format = "f")
+# n_medium <- getStringDistance(shuffled_medium, fasta_1_collapsed)
+# percent_medium <- format(100 * (1 - (n_medium / nchar(fasta_1_collapsed))), digits = 5, format = "f")
 
-n_high <- getStringDistance(shuffled_high, fasta_1_collapsed)
-percent_high <- format(100 * (1 - (n_high / nchar(fasta_1_collapsed))), digits = 5, format = "f")
+# n_high <- getStringDistance(shuffled_high, fasta_1_collapsed)
+# percent_high <- format(100 * (1 - (n_high / nchar(fasta_1_collapsed))), digits = 5, format = "f")
 
-n_max <- getStringDistance(shuffled_max, fasta_1_collapsed)
-percent_max <- format(100 * (1 - (n_max / nchar(fasta_1_collapsed))), digits = 5, format = "f")
+# n_max <- getStringDistance(shuffled_max, fasta_1_collapsed)
+# percent_max <- format(100 * (1 - (n_max / nchar(fasta_1_collapsed))), digits = 5, format = "f")
 
 # plot(x=0:4, y=c(n_min, n_low, n_medium, n_high, n_max))
 
-write(paste0(">", fileStem, "_max_divergence_", n_max, "_", percent_max, collapse=""), file=paste0(fileStem, ".max.tmp", collapse=""))
-write(paste0(">", fileStem, "_min_divergence_", n_min, "_", percent_min, collapse=""), file=paste0(fileStem, ".min.tmp", collapse=""))
-write(paste0(">", fileStem, "_low_divergence_", n_low, "_", percent_low, collapse=""), file=paste0(fileStem, ".low.tmp", collapse=""))
-write(paste0(">", fileStem, "_high_divergence_", n_high, "_", percent_high, collapse=""), file=paste0(fileStem, ".high.tmp", collapse=""))
-write(paste0(">", fileStem, "_medium_divergence_", n_medium, "_", percent_medium, collapse=""), file=paste0(fileStem, ".medium.tmp", collapse=""))
 
-write(shuffled_medium, file=paste0(fileStem, ".medium.tmp", collapse=""), append=TRUE)
-write(shuffled_max, file=paste0(fileStem, ".max.tmp", collapse=""), append=TRUE)
-write(shuffled_min, file=paste0(fileStem, ".min.tmp", collapse=""), append=TRUE)
-write(shuffled_low, file=paste0(fileStem, ".low.tmp", collapse=""), append=TRUE)
-write(shuffled_high, file=paste0(fileStem, ".high.tmp", collapse=""), append=TRUE)
+# headers renamed here to refer to IDENTITY instead of divergence here. Max identity = min divergence.
+write(paste0(">", fileStem, "_min_identity", collapse=""), file=paste0(fileStem, ".min.fasta", collapse=""))
+#write(paste0(">", fileStem, "_max_identity", collapse=""), file=paste0(fileStem, ".max.fasta", collapse=""))
+write(paste0(">", fileStem, "_high_identity", collapse=""), file=paste0(fileStem, ".high.fasta", collapse=""))
+write(paste0(">", fileStem, "_low_identity", collapse=""), file=paste0(fileStem, ".low.fasta", collapse=""))
+write(paste0(">", fileStem, "_medium_identity", collapse=""), file=paste0(fileStem, ".medium.fasta", collapse=""))
+
+write(shuffled_medium, file=paste0(fileStem, ".medium.fasta", collapse=""), append=TRUE)
+write(shuffled_max, file=paste0(fileStem, ".min.fasta", collapse=""), append=TRUE)
+# write(shuffled_min, file=paste0(fileStem, ".min.fasta", collapse=""), append=TRUE)
+write(shuffled_low, file=paste0(fileStem, ".high.fasta", collapse=""), append=TRUE)
+write(shuffled_high, file=paste0(fileStem, ".low.fasta", collapse=""), append=TRUE)
