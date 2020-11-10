@@ -19,7 +19,7 @@ Codon table retrieved from https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?
 
 Body of the above table's data saved as text file `codonTable.txt` 
 
-The contents of `codonTable.txt` is parsed and processed by [`printCodons.py`](printCodons.py) into `codons.tab`:
+The contents of `codonTable.txt` is parsed and processed by [`formatCodons.py`](formatCodons.py) into `codons.tab`:
 
 ```
 ( if [ ! -f "codons.tab" ]; then python3 formatCodons.py > "codons.tab"; fi )
