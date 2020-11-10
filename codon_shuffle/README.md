@@ -29,7 +29,7 @@ The contents of `codonTable.txt` is parsed and processed by [`printCodons.py`](p
 ```
 Rscript shuffle.R PCA1.cds.fasta CAD2.cds.fasta
 ```
-The script [`shuffle.R`](shuffle.R)generates four new `fasta` files with various % identity shared with `PCA1.cds.fasta` (in addition to the original `CAD2.cds.fasta` which is 3651 nt long, has a Levenshtein distance of 52 for 98.58% identity with PCA1):
+The script [`shuffle.R`](shuffle.R) generates four new `fasta` files with various % identity shared with `PCA1.cds.fasta` (in addition to the original `CAD2.cds.fasta` which is 3651 nt long, has a Levenshtein distance of 52 for 98.58% identity with PCA1):
  * `CAD2.cds.min.fasta`
  * `CAD2.cds.low.fasta`
  * `CAD2.cds.med.fasta`
