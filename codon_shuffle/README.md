@@ -1,6 +1,6 @@
 # Generating codon-shuffled versions of the CAD2 allele
 
-## Download PCA1 and CAD2 coding sequence
+## Retrieving PCA1 and CAD2 coding sequences
 
 PCA1 retrieved from https://www.yeastgenome.org/locus/S000000499
 
@@ -65,10 +65,10 @@ done
 ```
 
 ## Final levels of identity for variable CAD2
-| CAD2 version         | Percent identity| Levenshtein distance |
-|----------------------|-----------------|----------------------|
-| `CAD2.cds.fasta`     | 98.58%          |  52                  |
-| `CAD2.high.fasta`    | 86.88%          |  479                 |
-| `CAD2.medium.fasta`  | 74.23%          |  941                 |
-| `CAD2.low.fasta`     | 65.38%          |  1264                |
-| `CAD2.min.fasta`     | 55.49%          |  1625                |
+| CAD2 version                             | Percent identity| Levenshtein distance |
+|------------------------------------------|-----------------|----------------------|
+| [`CAD2.cds.fasta`](CAD2.cds.fasta)       | 98.58%          |  52                  |
+| [`CAD2.high.fasta`](CAD2.high.fasta)     | 86.88%          |  479                 |
+| [`CAD2.medium.fasta`](CAD2.medium.fasta) | 74.23%          |  941                 |
+| [`CAD2.low.fasta`](CAD2.low.fasta)       | 65.38%          |  1264                |
+| [`CAD2.min.fasta`](CAD2.min.fasta)       | 55.49%          |  1625                |
