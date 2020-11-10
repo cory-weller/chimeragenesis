@@ -82,7 +82,7 @@ class fasta:
         'CC|CCC|' : 'CC|CCG|'
         }
         splitCodons = '|'.join(codons)
-        for i in range(3):
+        for _ in range(3):
             for x in homopolymerDict:
                 splitCodons = splitCodons.replace(x, homopolymerDict[x])
         self.optimizedSeq = splitCodons.replace("|", "")
@@ -98,6 +98,6 @@ comparativeFasta = fasta(comparativeFastaFilename)
 seqName = filename.replace(".fasta","")
 seqLen, seqDist, seqIdentity = levenshtein(infileFasta.optimizedSeq, comparativeFasta.seq)
 
-fastaHeader = ">%s|length=%s|identity=%s|dist=%s" % (seqName, int(seqLen), seqIdentity, seqDist)
+fastaHeader = "%s|length=%s|identity=%s|dist=%s" % (seqName, int(seqLen), seqIdentity, seqDist)
 
 printFasta(fastaHeader, infileFasta.optimizedSeq)
