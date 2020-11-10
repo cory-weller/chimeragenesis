@@ -72,3 +72,5 @@ done
 | [`CAD2.medium.fasta`](CAD2.medium.fasta) | 74.23%          |  941                 |
 | [`CAD2.low.fasta`](CAD2.low.fasta)       | 65.38%          |  1264                |
 | [`CAD2.min.fasta`](CAD2.min.fasta)       | 55.49%          |  1625                |
+
+Alignment of all protein sequences [`CAD2.pep.aln`](CAD2.pep.aln) shows expected 100% identity.
