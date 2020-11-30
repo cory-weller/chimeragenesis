@@ -19,7 +19,7 @@ Codon table retrieved from https://www.kazusa.or.jp/codon/cgi-bin/showcodon.cgi?
 
 Body of the above table's data saved as text file `codonTable.txt` 
 
-The contents of `codonTable.txt` is parsed and processed by `printCodons.py` into `codons.tab`:
+The contents of `codonTable.txt` is parsed and processed by [`formatCodons.py`](formatCodons.py) into `codons.tab`:
 
 ```
 ( if [ ! -f "codons.tab" ]; then python3 formatCodons.py > "codons.tab"; fi )
@@ -29,7 +29,7 @@ The contents of `codonTable.txt` is parsed and processed by `printCodons.py` int
 ```
 Rscript shuffle.R PCA1.cds.fasta CAD2.cds.fasta
 ```
-The above script generates four new `fasta` files with various % identity shared with `PCA1.cds.fasta` (in addition to the original `CAD2.cds.fasta` which is 3651 nt long, has a Levenshtein distance of 52 for 98.58% identity with PCA1):
+The script [`shuffle.R`](shuffle.R) generates four new `fasta` files with various % identity shared with `PCA1.cds.fasta` (in addition to the original `CAD2.cds.fasta` which is 3651 nt long, has a Levenshtein distance of 52 for 98.58% identity with PCA1):
  * `CAD2.cds.min.fasta`
  * `CAD2.cds.low.fasta`
  * `CAD2.cds.med.fasta`
@@ -37,7 +37,7 @@ The above script generates four new `fasta` files with various % identity shared
 
  ## Removing homopolymers
 
- Then, I used `homopolymers.py` to remove homopolymers. See `class fasta` within the script for exact replacements.
+ Then, I used [`homopolymers.py`](homopolymers.py) to remove homopolymers. See `class fasta` within the script for exact replacements.
 
 ```
 ./homopolymers.py CAD2.cds.min.fasta PCA1.cds.fasta > CAD2.min.fasta && rm CAD2.cds.min.fasta
@@ -72,3 +72,5 @@ done
 | [`CAD2.medium.fasta`](CAD2.medium.fasta) | 74.23%          |  941                 |
 | [`CAD2.low.fasta`](CAD2.low.fasta)       | 65.38%          |  1264                |
 | [`CAD2.min.fasta`](CAD2.min.fasta)       | 55.49%          |  1625                |
+
+Alignment of all protein sequences [`CAD2.pep.aln`](CAD2.pep.aln) shows expected 100% identity.
