@@ -4,11 +4,8 @@
 
 args <- commandArgs(trailingOnly=TRUE)
 
-
-# If no args provided, treat as interactive session and provide args here
-#if(length(args) == 1) {
-#    args <- c("CAD2.cds.fasta", "PCA1.cds.fasta")
-#}
+# set freq_filter to exclude codons below a certain (amino-acid specific) frequency
+freq_filter <- 0.0
 
 fasta_1_filename <- args[1]
 fasta_2_filename <- args[2]
@@ -37,7 +34,8 @@ dat[, codon := gsub("U", "T", codon)]
 # recalculate fraction_per-AA with greater number of digits
 dat[, fraction_per_AA := count/sum(count), by=AA]
 
-# Remove codons with fraction_per_AA lower than 10%
+# Remove codons with fraction_per_AA lower than <freq_filter>%
+dat <- dat[fraction_per_AA > freq_filter]
 setkey(dat, codon, AA)
 
 AAs <- unique(dat[,AA])
