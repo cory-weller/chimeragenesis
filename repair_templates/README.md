@@ -4,14 +4,21 @@ Add nucleotide sequences upstream and downstream of the original genome location
 
 I took the `Genomic DNA +/- 1kb` fasta from [SGD](https://www.yeastgenome.org/locus/S000000499#sequence). The first 1000 nucleotides made `PCA1.upstream` and last 1000 nucleotides made `PCA1.downstream`.
 
-# Generating repair templates
+# Copy required files to this directory
+```
+cp ../codon_shuffle/CAD2.min.fasta ./CAD2.min.cds.fasta
+cp ../codon_shuffle/CAD2.low.fasta ./CAD2.low.cds.fasta
+cp ../codon_shuffle/CAD2.medium.fasta ./CAD2.medium.cds.fasta
+cp ../codon_shuffle/CAD2.high.fasta ./CAD2.high.cds.fasta
+cp ../codon_shuffle/CAD2.cds.fasta .
+```
 
-## Show the method works
+## Generate Repair Templates that show the method works
 Using longest repair templates (80 bp for each, or 160 bp total) and most diverged CAD2 sequence
 ```
 mkdir -p 01_test_method
-python3 ./chimera.py  PCA1 CAD2.55 --flanking PCA1 --repair-template-length 160 --unique protein > 01_test_method/PCA1_CAD2.55.RT-160.fasta
-python3 ./chimera.py  CAD2.55 PCA1 --flanking PCA1 --repair-template-length 160 --unique protein > 01_test_method/CAD2.55_PCA1.RT-160.fasta
+python3 ./chimera.py  PCA1 CAD2.min --flanking PCA1 --repair-template-length 160 --unique protein > 01_test_method/PCA1_CAD2.min.RT-160.fasta
+python3 ./chimera.py  CAD2.min PCA1 --flanking PCA1 --repair-template-length 160 --unique protein > 01_test_method/CAD2.min_PCA1.RT-160.fasta
 
 # 27 rts each * 2 = 54
 ```
@@ -20,17 +27,17 @@ python3 ./chimera.py  CAD2.55 PCA1 --flanking PCA1 --repair-template-length 160 
 This will be a total of 10 transformations (PCA1-CAD2 and CAD2-PCA1 orientations, with 5 levels of sequence homology)
 ```
 mkdir -p 02_RT_length
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.55.RT-all.fasta  ::: PCA1 ::: CAD2.55 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.65.RT-all.fasta  ::: PCA1 ::: CAD2.65 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.74.RT-all.fasta  ::: PCA1 ::: CAD2.74 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.87.RT-all.fasta  ::: PCA1 ::: CAD2.87 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.986.RT-all.fasta ::: PCA1 ::: CAD2.986 ::: 40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.min.RT-all.fasta  ::: PCA1 ::: CAD2.min :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.low.RT-all.fasta  ::: PCA1 ::: CAD2.low :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.medium.RT-all.fasta  ::: PCA1 ::: CAD2.medium :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.high.RT-all.fasta  ::: PCA1 ::: CAD2.high :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/PCA1_CAD2.orig.RT-all.fasta ::: PCA1 ::: CAD2 ::: 40 44 50 58 68 80 94 110 128 148 160
 
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.55_PCA1.RT-all.fasta  ::: CAD2.55 ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.65_PCA1.RT-all.fasta  ::: CAD2.65 ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.74_PCA1.RT-all.fasta  ::: CAD2.74 ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.87_PCA1.RT-all.fasta  ::: CAD2.87 ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
-parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.986_PCA1.RT-all.fasta ::: CAD2.986 ::: PCA1 ::: 40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.min_PCA1.RT-all.fasta  ::: CAD2.min ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.low_PCA1.RT-all.fasta  ::: CAD2.low ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.medium_PCA1.RT-all.fasta  ::: CAD2.medium ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.high_PCA1.RT-all.fasta  ::: CAD2.high ::: PCA1 :::  40 44 50 58 68 80 94 110 128 148 160
+parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-length {3} --unique protein > 02_RT_length/CAD2.orig_PCA1.RT-all.fasta ::: CAD2 ::: PCA1 ::: 40 44 50 58 68 80 94 110 128 148 160
 
 # 297 RTs each * 10 = 2970
 ```
@@ -38,8 +45,8 @@ parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-len
 ## Look at the affects of chimerizing at synonymous sites
 ```
 mkdir -p 03_synonymous_RT
-python3 ./chimera.py  PCA1 CAD2.55 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/PCA1_CAD2.55.RT-160-syn.fasta
-python3 ./chimera.py  CAD2.55 PCA1 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/CAD2.55_PCA1.RT-160-syn.fasta
+python3 ./chimera.py  PCA1 CAD2.min --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/PCA1_CAD2.min.RT-160-syn.fasta
+python3 ./chimera.py  CAD2.min PCA1 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/CAD2.min_PCA1.RT-160-syn.fasta
 
 # 1217 RTs each * 2 = 2434
 ```
