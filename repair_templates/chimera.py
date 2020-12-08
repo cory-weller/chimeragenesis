@@ -246,8 +246,12 @@ class repair_template:
         else:
             self.paddingTotal = int(oligo_length) - ( 2*int(primer_length) + 2*int(homology_length))
             self.paddingLength = int(self.paddingTotal /2)
-            self.paddingLeft = five_prime_padding[:self.paddingLength]
-            self.paddingRight = three_prime_padding[-self.paddingLength:]
+            if self.paddingLength == 0:
+                self.paddingLeft = ''
+                self.paddingRight = ''
+            else:
+                self.paddingLeft = five_prime_padding[:self.paddingLength]
+                self.paddingRight = three_prime_padding[-self.paddingLength:]
             self.rt = self.paddingLeft + self.homologyLeft + self.homologyRight + self.paddingRight
         self.rt_formatted = ">%s:Start-%s|%s:%s-End|RT:%s_nt_each\n%s" % (self.gene1, self.idx1, self.gene2, self.idx2+1, self.homology_length, wrap_fasta(self.rt))
 # oligo length = 2 * primer length + 2 * homology length + 2 * padding
