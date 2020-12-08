@@ -129,10 +129,23 @@ def run_alignment(n_permutations, pep1, pep2, length, specificity):
         for _ in range(n_permutations):
             yield clustal_alignment(random.randint(1,2), pep1, pep2, length, specificity)
 
-def generate_repair_templates(all_recombination_points, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
+def generate_repair_templates(  all_recombination_points, 
+                                gene1, 
+                                gene2,
+                                pep1, 
+                                pep2, 
+                                dna1, 
+                                dna2, 
+                                upstream, 
+                                downstream, 
+                                homology_length, 
+                                five_prime_padding, 
+                                three_prime_padding,
+                                primer_length,
+                                oligo_length):
     for recombination_point in all_recombination_points:
-        yield(repair_template(recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length))
- 
+        yield(repair_template(recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length, five_prime_padding, three_prime_padding, primer_length, oligo_length))
+
 def translate(dna_seq): 
     dna_seq = dna_seq.upper()
     table = { 
@@ -205,7 +218,7 @@ class clustal_alignment:
 
 class repair_template:
     help = 'repair template for generating an intended chimera'
-    def __init__(self, recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length):
+    def __init__(self, recombination_point, gene1, gene2, pep1, pep2, dna1, dna2, upstream, downstream, homology_length, five_prime_padding, three_prime_padding, primer_length, oligo_length):
         self.idx1 = recombination_point[0] * 3
         self.idx2 = recombination_point[1] * 3
         self.dna1 = dna1
@@ -221,16 +234,23 @@ class repair_template:
         self.pepChimera = translate(self.dnaChimera)
         self.homologyLeft = self.dnaSeq1[-(self.homology_length):]
         self.homologyRight =  self.dnaSeq2[:(self.homology_length)]
-        # .padLeft and .padRight indicate # of nucleotides missing from left or right repair template
+        # # .padLeft and .padRight indicate # of nucleotides missing from left or right repair template
         self.padLeft = self.homology_length - len(self.homologyLeft)
         self.padRight = self.homology_length - len(self.homologyRight)
         if self.padLeft > 0:
             self.homologyLeft = upstream[-(self.padLeft):] + self.homologyLeft
         if self.padRight > 0:
             self.homologyRight = self.homologyRight + downstream[:(self.padRight)]
-        self.rt = self.homologyLeft + self.homologyRight
+        if five_prime_padding == '' and three_prime_padding == '':
+            self.rt = self.homologyLeft + self.homologyRight
+        else:
+            self.paddingTotal = int(oligo_length) - ( 2*int(primer_length) + 2*int(homology_length))
+            self.paddingLength = int(self.paddingTotal /2)
+            self.paddingLeft = five_prime_padding[:self.paddingLength]
+            self.paddingRight = three_prime_padding[-self.paddingLength:]
+            self.rt = self.paddingLeft + self.homologyLeft + self.homologyRight + self.paddingRight
         self.rt_formatted = ">%s:Start-%s|%s:%s-End|RT:%s_nt_each\n%s" % (self.gene1, self.idx1, self.gene2, self.idx2+1, self.homology_length, wrap_fasta(self.rt))
-
+# oligo length = 2 * primer length + 2 * homology length + 2 * padding
 class fasta:
     help = 'stores type, header, and sequence information for FASTA files'
     def __init__(self, filename):
@@ -286,15 +306,15 @@ if __name__ == "__main__":
                                 explanation. To include all possible transitions, set
                                 to -1. Default: 0 (only transition between codons at
                                 their partner in the alignment, with no offset).''')
-    parser.add_argument("--padding",
-                        type=int,
-                        nargs='?',
-                        const=1,
-                        default=1000,
-                        help='''Integer. Defines the number of nucleotides upstream and downstream
-                                of the genomic DNA for the gene of interest in the
-                                user-provided dna fasta file. Default value: 1000 bp,
-                                i.e. genomic dna +/- 1 kilobase.''')
+#    parser.add_argument("--padding",
+#                        type=int,
+#                        nargs='?',
+#                        const=1,
+#                        default=1000,
+#                        help='''Integer. Defines the number of nucleotides upstream and downstream
+#                                of the genomic DNA for the gene of interest in the
+#                                user-provided dna fasta file. Default value: 1000 bp,
+#                                i.e. genomic dna +/- 1 kilobase.''')
     parser.add_argument("--threshold-length",
                         type=int,
                         nargs='?',
@@ -305,6 +325,39 @@ if __name__ == "__main__":
                                 confident homology (defined by -S). Only used when
                                 manually testing alignments--routine use does not
                                 require this argument. Default: 4''')
+    parser.add_argument("--primer-length",
+                        type=int,
+                        nargs='?',
+                        const=1,
+                        default=15,
+                        help='''Integer. Defines length of primer seq that will be
+                                added at later stage (on boths sides of repair template).
+                                Total oligo array oligonucleotide length will be equal to
+                               <Repair Template length> + 2*<primer length> + <padding> to
+                                equal specified <Total Oligo Length>''')
+    parser.add_argument("--oligo-length",
+                        type=int,
+                        nargs='?',
+                        const=1,
+                        default=210,
+                        help='''Integer. Defines total length (max possible) from oligo library
+                                synthesis.''')
+    parser.add_argument("--five-prime-padding",
+                        type=str,
+                        nargs='?',
+                        const=1,
+                        default='',
+                        help='''Defines nucleotide sequence to pad 5' (upstream) space if RT length
+                                is insufficient to reach total oligo length. Nucleotides will be 
+                                inserted 5' (upstream) the left RT homology arm. Default: No padding.''')
+    parser.add_argument("--three-prime-padding",
+                        type=str,
+                        nargs='?',
+                        const=1,
+                        default='',
+                        help='''Defines nucleotide sequence to pad 3' (downstream) space if RT length
+                                is insufficient to reach total oligo length. Nucleotides will be 
+                                inserted 3' (downstream) the right RT homology arm. Default: No padding.''')
     parser.add_argument("--repair-template-length",
                         type=int,
                         nargs='?',
@@ -427,7 +480,6 @@ if __name__ == "__main__":
     upstream = fasta(args.flanking + ".upstream.fasta")
     downstream = fasta(args.flanking + ".downstream.fasta")
 
-
     #print(alignment.aln1)
     #print(alignment.offset1)
     #print(alignment.aln2)
@@ -438,8 +490,8 @@ if __name__ == "__main__":
     #print(upstream)
     #print(downstream)
     
-    non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
-    homology_RTs = generate_repair_templates(alignment.homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length)
+    non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length, args.five_prime_padding, args.three_prime_padding, args.primer_length, args.oligo_length)
+    homology_RTs = generate_repair_templates(alignment.homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length, args.five_prime_padding, args.three_prime_padding, args.primer_length, args.oligo_length)
 
     unique_chimeras = []
 
