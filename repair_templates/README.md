@@ -63,10 +63,14 @@ wget
 Built reverse complement of of the reverse primers at https://www.bioinformatics.org/sms2/rev_comp.html and removed blank lines with `sed -i '/^$/d' skpp15-reverse-complemented.faa` 
 
 
-cd 01_test_method
-
+```
 for file in $(ls 01_test_method/*.fasta 02_RT_length/*.fasta 03_synonymous_RT/*.fasta); do
     cat ${file} | tr "\n" "@" | sed 's/@>/\n/g' | sed 's/each@/each,/g' | tr -d "@" > ${file%.fasta}.csv
 done
+```
 
-cat CAD2.high_PCA1.RT-all.fasta 
+And lastly zip RTs together
+
+```
+find . | grep csv | zip RTs -@
+```
