@@ -49,3 +49,13 @@ python3 ./chimera.py  CAD2.min PCA1 --flanking PCA1 --repair-template-length 160
 
 # 1217 RTs each * 2 = 2434
 ```
+
+## Add skpp15 primers
+
+Retrieved `skpp15` primers. PCR primer pairs (15-mers) obtained directly from Sri Kosuri (@skosuri). Modified from Elledge barcodes, https://elledge.hms.harvard.edu/?page_id=638
+
+```
+wget https://github.com/lasersonlab/pribar/raw/master/skpp15-forward.faa
+wget https://github.com/lasersonlab/pribar/raw/master/skpp15-reverse.faa
+wget 
+```
