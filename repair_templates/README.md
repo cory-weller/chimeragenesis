@@ -57,7 +57,6 @@ Retrieved `skpp15` primers. PCR primer pairs (15-mers) obtained directly from Sr
 ```
 wget https://github.com/lasersonlab/pribar/raw/master/skpp15-forward.faa
 wget https://github.com/lasersonlab/pribar/raw/master/skpp15-reverse.faa
-wget 
 ```
 
 Built reverse complement of of the reverse primers at https://www.bioinformatics.org/sms2/rev_comp.html and removed blank lines with `sed -i '/^$/d' skpp15-reverse-complemented.faa` 
