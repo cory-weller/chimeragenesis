@@ -62,6 +62,7 @@ wget
 
 Built reverse complement of of the reverse primers at https://www.bioinformatics.org/sms2/rev_comp.html and removed blank lines with `sed -i '/^$/d' skpp15-reverse-complemented.faa` 
 
+Convert FASTA format to single-line csv
 
 ```
 for file in $(ls 01_test_method/*.fasta 02_RT_length/*.fasta 03_synonymous_RT/*.fasta); do
@@ -69,8 +70,22 @@ for file in $(ls 01_test_method/*.fasta 02_RT_length/*.fasta 03_synonymous_RT/*.
 done
 ```
 
-And lastly zip RTs together
+Concatenate skpp15 primers to RT sequences
 
 ```
-find . | grep csv | zip RTs -@
+N=100
+for file in $(ls 01_test_method/*.csv 02_RT_length/*.csv 03_synonymous_RT/*.csv); do
+    let N=N+1
+    let lineNo=N*2
+    forward=$(sed -n ${lineNo}p skpp15-forward.faa)
+    reverse=$(sed -n ${lineNo}p skpp15-reverse-complemented.faa)
+    awk -F "," -v f=${forward} -v r=${reverse} '{print $1,f$2r}' ${file} > ${file%.csv}.skpp${N}.RT.csv
+done
+```
+
+Zip skpp15 RT oligos
+
+```
+find . | grep skpp | grep csv | zip skpp15.RTs.zip -@
+
 ```
