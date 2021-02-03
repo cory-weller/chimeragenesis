@@ -44,10 +44,17 @@ parallel -j 1 python3 ./chimera.py {1} {2} --flanking PCA1 --repair-template-len
 ## Look at the affects of chimerizing at synonymous sites
 ```
 mkdir -p 03_synonymous_RT
-python3 ./chimera.py  PCA1 CAD2.min --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/PCA1_CAD2.min.RT-160-syn.fasta
-python3 ./chimera.py  CAD2.min PCA1 --flanking PCA1 --repair-template-length 160 --unique dna > 03_synonymous_RT/CAD2.min_PCA1.RT-160-syn.fasta
+python3 ./chimera.py  PCA1 CAD2.min --flanking PCA1 --repair-template-length 160 --unique dna --oligo-length 190 --repair-template-length 160 > 03_synonymous_RT/PCA1_CAD2.min.RT-160-syn.fasta
+python3 ./chimera.py  CAD2.min PCA1 --flanking PCA1 --repair-template-length 160 --unique dna --oligo-length 190 --repair-template-length 160 > 03_synonymous_RT/CAD2.min_PCA1.RT-160-syn.fasta
 
 # 1217 RTs each * 2 = 2434
+```
+
+# Generate all possible chimeras (no alignment needed) for AcrIIa2b and AcrIIa4
+```
+python3 chimera.py AcrIIa2b AcrIIa4 --all --unique dna --flanking acr --repair-template-length 160 --primer-length 15 --oligo-length 190 > 04_Acrs/AcrIIa2b_AcrIIa4.RT-160.fasta
+python3 chimera.py AcrIIa4 AcrIIa2b --all --unique dna --flanking acr --repair-template-length 160 --primer-length 15 --oligo-length 190 > 04_Acrs/AcrIIa4_AcrIIa2b.RT-160.fasta
+
 ```
 
 ## Add skpp15 primers

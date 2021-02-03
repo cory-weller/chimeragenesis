@@ -426,7 +426,7 @@ if __name__ == "__main__":
     try: assert args.specificity in ["low", "medium", "high"], "ERROR: -s, --specificity must be 'low', 'medium', or 'high'"
     except AssertionError as error: sys.exit(error)
 
-    try: assert args.unique in ["protein", "dna"], "ERROR: -u, --unique must be 'prot' or 'dna'"
+    try: assert args.unique in ["protein", "dna"], "ERROR: --unique must be 'prot' or 'dna'"
     except AssertionError as error: sys.exit(error)
     
 #######################################################################################################################
@@ -479,20 +479,34 @@ if __name__ == "__main__":
     pep_txt1 = '>%s\n%s\n' % (args.gene1_filestem, pep1.seq)
     pep_txt2 = '>%s\n%s\n' % (args.gene2_filestem, pep2.seq)
 
-    alignment = list(run_alignment(0, pep_txt1, pep_txt2, args.threshold_length, args.specificity))[0]
+    
+
+
 
     upstream = fasta(args.flanking + ".upstream.fasta")
     downstream = fasta(args.flanking + ".downstream.fasta")
 
-    #print(alignment.aln1)
-    #print(alignment.offset1)
-    #print(alignment.aln2)
-    #print(alignment.offset2)
-    #print(alignment.non_homology_combos)
-    #print(alignment.homology_combos)
+    if args.all:
+        transition_points = [ [i,j] for i in range(len(pep1.seq)) for j in range(len(pep2.seq)) ]
+        all_RTs = generate_repair_templates(transition_points, 
+                                            args.gene1_filestem, 
+                                            args.gene2_filestem, 
+                                            pep1.seq, pep2.seq, 
+                                            dna1.seq, dna2.seq, 
+                                            upstream.seq, 
+                                            downstream.seq, 
+                                            homology_length, 
+                                            args.five_prime_padding, 
+                                            args.three_prime_padding, 
+                                            args.primer_length, 
+                                            args.oligo_length
+                                            )
+        for template in all_RTs:
+            print(template.rt_formatted)
+        sys.exit("exiting")
 
-    #print(upstream)
-    #print(downstream)
+    alignment = list(run_alignment(0, pep_txt1, pep_txt2, args.threshold_length, args.specificity))[0]
+
     
     non_homology_RTs = generate_repair_templates(alignment.non_homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length, args.five_prime_padding, args.three_prime_padding, args.primer_length, args.oligo_length)
     homology_RTs = generate_repair_templates(alignment.homology_combos, args.gene1_filestem, args.gene2_filestem, pep1.seq, pep2.seq, dna1.seq, dna2.seq, upstream.seq, downstream.seq, homology_length, args.five_prime_padding, args.three_prime_padding, args.primer_length, args.oligo_length)
