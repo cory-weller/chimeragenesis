@@ -66,7 +66,7 @@ translate <- function(i) {
 # method = "max" will return maximally divergent sequence
 # method = "min" will return minimally divergent sequence (i.e. as similar as possible on nucleotide level)
 codonShuffle <- function(seq_1_codon_static, seq_2_codon_to_shuffle, method) {
-    dt <- dat2[AA == translate(seq_2_codon_to_shuffle) & old_codon == seq_1_codon_static]
+    dt <- dat2[AA %in% translate(seq_2_codon_to_shuffle) & old_codon == seq_1_codon_static]
     if(nrow(dt) == 0) {
         return(seq_2_codon_to_shuffle)
     } else {
@@ -128,13 +128,13 @@ shuffled_medium <- paste0(mapply(codonShuffle, seq_1_codon_static = fasta_1, seq
 
 # headers renamed here to refer to IDENTITY instead of divergence here. Max identity = min divergence.
 write(paste0(">", fileStem, "_min_identity", collapse=""), file=paste0(fileStem, ".min.fasta", collapse=""))
-#write(paste0(">", fileStem, "_max_identity", collapse=""), file=paste0(fileStem, ".max.fasta", collapse=""))
+write(paste0(">", fileStem, "_max_identity", collapse=""), file=paste0(fileStem, ".max.fasta", collapse=""))
 write(paste0(">", fileStem, "_high_identity", collapse=""), file=paste0(fileStem, ".high.fasta", collapse=""))
 write(paste0(">", fileStem, "_low_identity", collapse=""), file=paste0(fileStem, ".low.fasta", collapse=""))
 write(paste0(">", fileStem, "_medium_identity", collapse=""), file=paste0(fileStem, ".medium.fasta", collapse=""))
 
 write(shuffled_medium, file=paste0(fileStem, ".medium.fasta", collapse=""), append=TRUE)
 write(shuffled_max, file=paste0(fileStem, ".min.fasta", collapse=""), append=TRUE)
-# write(shuffled_min, file=paste0(fileStem, ".min.fasta", collapse=""), append=TRUE)
+write(shuffled_min, file=paste0(fileStem, ".max.fasta", collapse=""), append=TRUE)
 write(shuffled_low, file=paste0(fileStem, ".high.fasta", collapse=""), append=TRUE)
 write(shuffled_high, file=paste0(fileStem, ".low.fasta", collapse=""), append=TRUE)
